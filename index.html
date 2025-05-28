@@ -4,12 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Contagem para ver o MôBem</title>
+
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 
   <style>
     body {
       background-color: #0f0f0f;
-      overflow: hidden;
+      overflow: hidden; 
       margin: 0;
       padding: 0;
       min-height: 100vh;
@@ -22,9 +23,11 @@
       position: absolute;
       font-size: 2rem;
       color: #ff69b4;
-      pointer-events: none;
-      user-select: none;
+      pointer-events: none; 
+      user-select: none; 
       animation: fallAndFade 10s linear infinite;
+      /* Dica para o navegador otimizar estas propriedades para animação */
+      will-change: transform, opacity; 
     }
 
     @keyframes fallAndFade {
@@ -46,7 +49,7 @@
 
     .content {
       position: relative;
-      z-index: 10;
+      z-index: 10; 
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -82,10 +85,11 @@
   </style>
 </head>
 <body>
-  <!-- Corações animados -->
+
   <script>
     const body = document.body;
-    const numberOfHearts = 30;
+    // Reduzimos o número de corações. Você pode experimentar valores entre 10 e 30.
+    const numberOfHearts = 20; // Um número menor pode melhorar a performance
     const minDelay = 0;
     const maxDelay = 8;
     const minSize = 1.0;
@@ -99,16 +103,16 @@
       const randomSize = Math.random() * (maxSize - minSize) + minSize;
       heart.style.fontSize = `${randomSize}rem`;
       const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
-      heart.style.animationDelay = `-${randomDelay}s`;
+      heart.style.animationDelay = `-${randomDelay}s`; 
       body.appendChild(heart);
     }
 
+    // Criamos os corações uma única vez.
     for (let i = 0; i < numberOfHearts; i++) {
       createHeart();
     }
   </script>
 
-  <!-- Conteúdo principal -->
   <div class="content">
     <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white">Tempo para ver o MôBem</h1>
     <div class="timer-grid">
@@ -131,20 +135,28 @@
     </div>
   </div>
 
-  <!-- Script do contador -->
   <script>
-    const targetDate = new Date("2025-05-09T10:00:00").getTime();
+    // Usando uma data futura para a demonstração funcionar.
+    // Lembre-se: o mês em JavaScript é de 0 a 11 (Maio é 4, Junho é 5, etc.)
+    const targetDate = new Date(2025, 6, 28, 14, 30, 0).getTime(); // Exemplo: 28 de Julho de 2025, 14:30
 
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = targetDate - now;
 
+      const daysElement = document.getElementById("days");
+      const hoursElement = document.getElementById("hours");
+      const minutesElement = document.getElementById("minutes");
+      const secondsElement = document.getElementById("seconds");
+
       if (distance < 0) {
-        document.getElementById("days").textContent = "00";
-        document.getElementById("hours").textContent = "00";
-        document.getElementById("minutes").textContent = "00";
-        document.getElementById("seconds").textContent = "00";
-        return;
+        // Garante que o relógio finalize em "00"
+        daysElement.textContent = "00";
+        hoursElement.textContent = "00";
+        minutesElement.textContent = "00";
+        secondsElement.textContent = "00";
+        clearInterval(countdownInterval); // Para o setInterval quando o tempo acabar
+        return; 
       }
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -152,14 +164,27 @@
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      document.getElementById("days").textContent = String(days).padStart(2, "0");
-      document.getElementById("hours").textContent = String(hours).padStart(2, "0");
-      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
-      document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+      // Atualiza o DOM apenas se o valor for diferente para minimizar repaints
+      if (daysElement.textContent !== String(days).padStart(2, "0")) {
+        daysElement.textContent = String(days).padStart(2, "0");
+      }
+      if (hoursElement.textContent !== String(hours).padStart(2, "0")) {
+        hoursElement.textContent = String(hours).padStart(2, "0");
+      }
+      if (minutesElement.textContent !== String(minutes).padStart(2, "0")) {
+        minutesElement.textContent = String(minutes).padStart(2, "0");
+      }
+      if (secondsElement.textContent !== String(seconds).padStart(2, "0")) {
+        secondsElement.textContent = String(seconds).padStart(2, "0");
+      }
     }
 
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    let countdownInterval; // Variável para armazenar a referência do intervalo
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateCountdown(); // Atualiza uma vez imediatamente para exibir os valores corretos
+      countdownInterval = setInterval(updateCountdown, 1000); // Inicia o contador
+    });
   </script>
 </body>
 </html>
