@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tempo até ver o MôBem</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contagem para ver o MôBem</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 
   <style>
     body {
-      background-color: #ffeef2;
+      background-color: #0f0f0f;
       overflow: hidden;
       margin: 0;
       padding: 0;
       min-height: 100vh;
       position: relative;
+      color: white;
       font-family: sans-serif;
     }
 
@@ -32,15 +32,12 @@
         opacity: 0;
         transform: translateY(-10vh) scale(0.8) rotate(0deg);
       }
-
       10% {
         opacity: 0.9;
       }
-
       80% {
         opacity: 0.9;
       }
-
       100% {
         opacity: 0;
         transform: translateY(110vh) scale(1.2) rotate(360deg);
@@ -50,33 +47,42 @@
     .content {
       position: relative;
       z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
       text-align: center;
-      padding-top: 5rem;
     }
 
-    .counter {
-      font-size: 1.5rem;
-      color: #444;
-      margin-top: 1rem;
+    .timer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .timer-box {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+      min-width: 120px;
+    }
+
+    .timer-value {
+      font-size: 3rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .timer-label {
+      font-size: 1rem;
+      margin-top: 0.5rem;
     }
   </style>
 </head>
-
 <body>
-  <!-- Conteúdo em primeiro plano -->
-  <div class="content">
-    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-pink-800 mb-4 md:mb-6">
-      Tempo até ver o MôBem
-    </h1>
-    <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8 md:mb-12 px-4">
-      Estou contando os minutos!
-    </p>
-    <div class="counter" id="countdown">
-      Carregando contador...
-    </div>
-  </div>
-
-  <!-- Corações flutuantes -->
+  <!-- Corações animados -->
   <script>
     const body = document.body;
     const numberOfHearts = 30;
@@ -90,9 +96,10 @@
       heart.classList.add('heart-particle');
       heart.textContent = '❤️';
       heart.style.left = `${Math.random() * 100}vw`;
-      const size = Math.random() * (maxSize - minSize) + minSize;
-      heart.style.fontSize = `${size}rem`;
-      heart.style.animationDelay = `-${Math.random() * (maxDelay - minDelay) + minDelay}s`;
+      const randomSize = Math.random() * (maxSize - minSize) + minSize;
+      heart.style.fontSize = `${randomSize}rem`;
+      const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
+      heart.style.animationDelay = `-${randomDelay}s`;
       body.appendChild(heart);
     }
 
@@ -101,32 +108,58 @@
     }
   </script>
 
-  <!-- Contador Regressivo -->
+  <!-- Conteúdo principal -->
+  <div class="content">
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white">Tempo para ver o MôBem</h1>
+    <div class="timer-grid">
+      <div class="timer-box">
+        <div id="days" class="timer-value">--</div>
+        <div class="timer-label">Dias</div>
+      </div>
+      <div class="timer-box">
+        <div id="hours" class="timer-value">--</div>
+        <div class="timer-label">Horas</div>
+      </div>
+      <div class="timer-box">
+        <div id="minutes" class="timer-value">--</div>
+        <div class="timer-label">Minutos</div>
+      </div>
+      <div class="timer-box">
+        <div id="seconds" class="timer-value">--</div>
+        <div class="timer-label">Segundos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script do contador -->
   <script>
-    const countdownElement = document.getElementById("countdown");
+    const targetDate = new Date("2025-05-09T10:00:00").getTime();
 
     function updateCountdown() {
-      const now = new Date();
-      const targetDate = new Date("2025-05-09T10:00:00");
-      const diff = targetDate - now;
+      const now = new Date().getTime();
+      const distance = targetDate - now;
 
-      if (diff <= 0) {
-        countdownElement.innerHTML = "É agoraaa! ❤️";
+      if (distance < 0) {
+        document.getElementById("days").textContent = "00";
+        document.getElementById("hours").textContent = "00";
+        document.getElementById("minutes").textContent = "00";
+        document.getElementById("seconds").textContent = "00";
         return;
       }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      countdownElement.innerHTML =
-        `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      document.getElementById("days").textContent = String(days).padStart(2, "0");
+      document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+      document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
     }
 
     updateCountdown();
     setInterval(updateCountdown, 1000);
   </script>
 </body>
-
 </html>
