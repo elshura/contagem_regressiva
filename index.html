@@ -15,44 +15,54 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden; /* Evita barras de rolagem */
-            position: relative; /* Para posicionar as partículas */
+            overflow: hidden;
+            position: relative;
+            padding: 2vh 5vw;
+            box-sizing: border-box;
+            text-align: center;
         }
 
         #headline {
-            font-size: 2em;
-            margin-bottom: 20px;
+            font-size: clamp(1.5rem, 3vw, 3rem);
+            margin-bottom: 5vh;
             font-weight: bold;
         }
 
         .countdown-container {
             display: flex;
-            gap: 10px;
+            flex-wrap: wrap;
+            gap: 2vw;
+            justify-content: center;
+            width: 100%;
+            max-width: 900px;
         }
 
         .countdown-item {
             background-color: #222;
             color: #eee;
-            padding: 20px;
-            border-radius: 5px;
-            font-size: 3em;
+            padding: 2em;
+            border-radius: 0.5em;
+            font-size: clamp(1.5rem, 5vw, 3rem);
             font-weight: bold;
             text-align: center;
-            min-width: 80px; /* Largura mínima para cada item */
+            flex: 1 1 100px;
+            min-width: 70px;
+            max-width: 160px;
             position: relative;
             overflow: hidden;
         }
 
         .countdown-item span {
             display: block;
-            font-size: 0.3em;
+            font-size: 0.4em;
             font-weight: normal;
-            margin-top: 5px;
+            margin-top: 0.5em;
         }
 
         .digit-container {
             position: relative;
             line-height: 1;
+            height: 1em;
         }
 
         .digit-current, .digit-next {
@@ -72,20 +82,20 @@
         }
 
         .digit-container.animate .digit-current {
-                transform: translateY(-100%);
-                transition: transform 0.3s ease-in-out;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
         }
 
         .digit-container.animate .digit-next {
-                transform: translateY(-100%);
-                transition: transform 0.3s ease-in-out;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
         }
 
         .particle {
             position: absolute;
             width: 5px;
             height: 5px;
-            background-color: rgba(255, 255, 255, 0.2); /* Branco esmaecido */
+            background-color: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             pointer-events: none;
             z-index: -1;
@@ -143,8 +153,8 @@
                 particle.style.left = `${Math.random() * 100}vw`;
                 particle.style.animationDelay = `${Math.random() * 5}s`;
                 particle.style.animationDuration = `${Math.random() * 5 + 5}s`;
-                particle.style.opacity = Math.random() * 0.5; // Adiciona um pouco de variação na opacidade
-                particle.style.transform = `scale(${Math.random() * 0.8 + 0.2})`; // Adiciona variação no tamanho
+                particle.style.opacity = Math.random() * 0.5;
+                particle.style.transform = `scale(${Math.random() * 0.8 + 0.2})`;
                 container.appendChild(particle);
             }
         }
@@ -160,17 +170,15 @@
                 setTimeout(() => {
                     current.textContent = newValue;
                     container.classList.remove('animate');
-                }, 300); // Duração da transição deve ser igual à do CSS
+                }, 300);
             }
         }
 
         function startCountdown() {
-            // A data final da contagem regressiva é fixa: 9 de Junho de 2025, às 00:00:00
-            // A contagem regressiva começará "a partir de hoje" (27/05) simplesmente porque "hoje" é a data atual.
             const endDate = new Date('June 9, 2025 00:00:00').getTime();
 
             const x = setInterval(function() {
-                const now = new Date().getTime(); // Obtém o horário atual do dispositivo
+                const now = new Date().getTime();
                 const distance = endDate - now;
 
                 if (distance < 0) {
@@ -179,8 +187,6 @@
                     updateDigit("hours", "00");
                     updateDigit("minutes", "00");
                     updateDigit("seconds", "00");
-                    // Mensagem opcional quando a contagem termina
-                    // document.querySelector('.countdown-container').innerHTML = "<h1>O evento começou!</h1>";
                     return;
                 }
 
@@ -194,14 +200,13 @@
                 updateDigit("minutes", formatTime(minutes));
                 updateDigit("seconds", formatTime(seconds));
 
-            }, 1000); // Atualiza a cada 1 segundo
+            }, 1000);
         }
 
         function formatTime(time) {
             return time < 10 ? "0" + time : time;
         }
 
-        // Inicia a contagem regressiva e cria as partículas quando a página é carregada
         window.onload = () => {
             startCountdown();
             createSnowflakes();
