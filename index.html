@@ -1,216 +1,132 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contagem Regressiva para ver o MôBem</title>
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            position: relative;
-            padding: 2vh 5vw;
-            box-sizing: border-box;
-            text-align: center;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tempo até ver o MôBem</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
-        #headline {
-            font-size: clamp(1.5rem, 3vw, 3rem);
-            margin-bottom: 5vh;
-            font-weight: bold;
-        }
+  <style>
+    body {
+      background-color: #ffeef2;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      position: relative;
+      font-family: sans-serif;
+    }
 
-        .countdown-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2vw;
-            justify-content: center;
-            width: 100%;
-            max-width: 900px;
-        }
+    .heart-particle {
+      position: absolute;
+      font-size: 2rem;
+      color: #ff69b4;
+      pointer-events: none;
+      user-select: none;
+      animation: fallAndFade 10s linear infinite;
+    }
 
-        .countdown-item {
-            background-color: #222;
-            color: #eee;
-            padding: 2em;
-            border-radius: 0.5em;
-            font-size: clamp(1.5rem, 5vw, 3rem);
-            font-weight: bold;
-            text-align: center;
-            flex: 1 1 100px;
-            min-width: 70px;
-            max-width: 160px;
-            position: relative;
-            overflow: hidden;
-        }
+    @keyframes fallAndFade {
+      0% {
+        opacity: 0;
+        transform: translateY(-10vh) scale(0.8) rotate(0deg);
+      }
 
-        .countdown-item span {
-            display: block;
-            font-size: 0.4em;
-            font-weight: normal;
-            margin-top: 0.5em;
-        }
+      10% {
+        opacity: 0.9;
+      }
 
-        .digit-container {
-            position: relative;
-            line-height: 1;
-            height: 1em;
-        }
+      80% {
+        opacity: 0.9;
+      }
 
-        .digit-current, .digit-next {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      100% {
+        opacity: 0;
+        transform: translateY(110vh) scale(1.2) rotate(360deg);
+      }
+    }
 
-        .digit-next {
-            top: 100%;
-            background-color: #222;
-        }
+    .content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding-top: 5rem;
+    }
 
-        .digit-container.animate .digit-current {
-            transform: translateY(-100%);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .digit-container.animate .digit-next {
-            transform: translateY(-100%);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .particle {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(105vh);
-            }
-        }
-    </style>
+    .counter {
+      font-size: 1.5rem;
+      color: #444;
+      margin-top: 1rem;
+    }
+  </style>
 </head>
+
 <body>
-    <div id="headline">Tempo para ver o MôBem</div>
-    <div class="countdown-container">
-        <div class="countdown-item">
-            <div class="digit-container">
-                <div class="digit-current" id="days">00</div>
-                <div class="digit-next">00</div>
-            </div>
-            <span>Dias</span>
-        </div>
-        <div class="countdown-item">
-            <div class="digit-container">
-                <div class="digit-current" id="hours">00</div>
-                <div class="digit-next">00</div>
-            </div>
-            <span>Horas</span>
-        </div>
-        <div class="countdown-item">
-            <div class="digit-container">
-                <div class="digit-current" id="minutes">00</div>
-                <div class="digit-next">00</div>
-            </div>
-            <span>Minutos</span>
-        </div>
-        <div class="countdown-item">
-            <div class="digit-container">
-                <div class="digit-current" id="seconds">00</div>
-                <div class="digit-next">00</div>
-            </div>
-            <span>Segundos</span>
-        </div>
+  <!-- Conteúdo em primeiro plano -->
+  <div class="content">
+    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-pink-800 mb-4 md:mb-6">
+      Tempo até ver o MôBem
+    </h1>
+    <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8 md:mb-12 px-4">
+      Estou contando os minutos!
+    </p>
+    <div class="counter" id="countdown">
+      Carregando contador...
     </div>
+  </div>
 
-    <script>
-        function createSnowflakes() {
-            const numParticles = 100;
-            const container = document.body;
+  <!-- Corações flutuantes -->
+  <script>
+    const body = document.body;
+    const numberOfHearts = 30;
+    const minDelay = 0;
+    const maxDelay = 8;
+    const minSize = 1.0;
+    const maxSize = 2.5;
 
-            for (let i = 0; i < numParticles; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                particle.style.left = `${Math.random() * 100}vw`;
-                particle.style.animationDelay = `${Math.random() * 5}s`;
-                particle.style.animationDuration = `${Math.random() * 5 + 5}s`;
-                particle.style.opacity = Math.random() * 0.5;
-                particle.style.transform = `scale(${Math.random() * 0.8 + 0.2})`;
-                container.appendChild(particle);
-            }
-        }
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart-particle');
+      heart.textContent = '❤️';
+      heart.style.left = `${Math.random() * 100}vw`;
+      const size = Math.random() * (maxSize - minSize) + minSize;
+      heart.style.fontSize = `${size}rem`;
+      heart.style.animationDelay = `-${Math.random() * (maxDelay - minDelay) + minDelay}s`;
+      body.appendChild(heart);
+    }
 
-        function updateDigit(elementId, newValue) {
-            const container = document.getElementById(elementId).parentNode;
-            const current = container.querySelector('.digit-current');
-            const next = container.querySelector('.digit-next');
+    for (let i = 0; i < numberOfHearts; i++) {
+      createHeart();
+    }
+  </script>
 
-            if (current.textContent !== newValue) {
-                next.textContent = newValue;
-                container.classList.add('animate');
-                setTimeout(() => {
-                    current.textContent = newValue;
-                    container.classList.remove('animate');
-                }, 300);
-            }
-        }
+  <!-- Contador Regressivo -->
+  <script>
+    const countdownElement = document.getElementById("countdown");
 
-        function startCountdown() {
-            const endDate = new Date('June 9, 2025 00:00:00').getTime();
+    function updateCountdown() {
+      const now = new Date();
+      const targetDate = new Date("2025-05-09T10:00:00");
+      const diff = targetDate - now;
 
-            const x = setInterval(function() {
-                const now = new Date().getTime();
-                const distance = endDate - now;
+      if (diff <= 0) {
+        countdownElement.innerHTML = "É agoraaa! ❤️";
+        return;
+      }
 
-                if (distance < 0) {
-                    clearInterval(x);
-                    updateDigit("days", "00");
-                    updateDigit("hours", "00");
-                    updateDigit("minutes", "00");
-                    updateDigit("seconds", "00");
-                    return;
-                }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
 
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      countdownElement.innerHTML =
+        `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
 
-                updateDigit("days", formatTime(days));
-                updateDigit("hours", formatTime(hours));
-                updateDigit("minutes", formatTime(minutes));
-                updateDigit("seconds", formatTime(seconds));
-
-            }, 1000);
-        }
-
-        function formatTime(time) {
-            return time < 10 ? "0" + time : time;
-        }
-
-        window.onload = () => {
-            startCountdown();
-            createSnowflakes();
-        };
-    </script>
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
 </body>
+
 </html>
