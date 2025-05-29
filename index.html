@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MôBem</title>
-    <!-- Importação de fontes manuscritas do Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Parisienne&family=Sacramento&display=swap" rel="stylesheet">
@@ -37,8 +36,20 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
+            /* Removido overflow-x: hidden; daqui, pois o container de corações cuidará disso */
             position: relative;
+        }
+
+        /* Novo container para a animação de corações */
+        .heart-animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; /* Isso vai cortar os corações que saem da tela */
+            pointer-events: none; /* Permite interagir com os elementos por baixo */
+            z-index: 0; /* Garante que fique no fundo */
         }
 
         /* Container principal */
@@ -48,6 +59,7 @@
             padding: 2rem;
             text-align: center;
             z-index: 1; /* Acima dos corações */
+            position: relative; /* Necessário para o z-index funcionar */
         }
 
         /* Título principal */
@@ -77,6 +89,10 @@
         .countdown-title {
             margin-bottom: 1rem;
             font-size: 1.3rem;
+            /* Corrigido o estilo inline para CSS */
+            font-family: 'Dancing Script', cursive; /* Usei Dancing Script como exemplo, já importada */
+            font-size: 3.5rem;
+            color: var(--cor-destaque);
         }
 
         .countdown {
@@ -218,7 +234,7 @@
             color: var(--cor-secundaria);
             font-size: 20px;
             animation: cair linear forwards;
-            z-index: 0;
+            /* z-index: 0; - Removido daqui, pois o heart-animation-container já define o z-index */
         }
 
         @keyframes cair {
@@ -295,14 +311,14 @@
     </style>
 </head>
 <body>
-    <!-- Container principal -->
+    <div class="heart-animation-container"></div>
+
     <div class="container">
         <h1>Tempo até encontrar o MôBem</h1>
         <h2>Contando os minutos até estarmos juntos...</h2>
         
-        <!-- Área do temporizador -->
         <div class="countdown-container">
-            <div style="Font-family: 'Brush Script MT', cursive;font-size: 3.5rem; color:#d77fa1""; class="countdown-title">Faltam:</div>
+            <div class="countdown-title">Faltam:</div>
             <div class="countdown">
                 <div class="countdown-item">
                     <div class="countdown-value" id="dias">00</div>
@@ -323,11 +339,9 @@
             </div>
         </div>
         
-        <!-- Botão para abrir a cartinha -->
         <button class="btn-cartinha" id="btnAbrirCartinha">Abrir Cartinha</button>
     </div>
     
-    <!-- Cartinha (inicialmente oculta) -->
     <div class="cartinha-container" id="cartinhaContainer">
         <div class="cartinha">
             <button class="btn-fechar" id="btnFecharCartinha">×</button>
@@ -346,14 +360,11 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script>
         // Função para iniciar o temporizador
         function iniciarTemporizador() {
             // Data alvo (25 de Dezembro de 2025, 00:00:00)
-            
-            const dataAlvo = new Date(2025, 05, 10, 00, 10, 30).getTime(); //
-            
+            const dataAlvo = new Date(2025, 05, 10, 00, 10, 30).getTime(); // Ajuste a data aqui
             
             // Atualiza o temporizador a cada segundo
             const temporizador = setInterval(function() {
@@ -388,7 +399,8 @@
 
         // Função para criar e animar corações caindo
         function criarCoracoes() {
-            const body = document.querySelector('body');
+            // Seleciona o novo container para os corações
+            const heartContainer = document.querySelector('.heart-animation-container');
             const larguraTela = window.innerWidth;
             
             // Cria um novo coração a cada 300ms
@@ -415,8 +427,8 @@
                 // Conteúdo do coração (emoji)
                 coracao.innerHTML = '❤️';
                 
-                // Adiciona o coração ao body
-                body.appendChild(coracao);
+                // Adiciona o coração ao novo container
+                heartContainer.appendChild(coracao);
                 
                 // Remove o coração após a animação terminar
                 setTimeout(() => {
