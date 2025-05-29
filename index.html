@@ -1,193 +1,461 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contagem para ver o MôBem</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MôBem</title>
+    <!-- Importação de fontes manuscritas do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Parisienne&family=Sacramento&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Variáveis CSS para facilitar a manutenção da paleta de cores */
+        :root {
+            --cor-primaria: #f8c8dc; /* Rosa claro */
+            --cor-secundaria: #e6a4b4; /* Rosa médio */
+            --cor-destaque: #d77fa1; /* Rosa escuro */
+            --cor-fundo: #fff5f7; /* Fundo rosa bem claro */
+            --cor-texto: #4a4a4a; /* Cinza escuro para texto */
+            --cor-texto-claro: #ffffff; /* Branco para texto em fundos escuros */
+            --sombra-suave: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+        /* Reset e estilos básicos */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <style>
-    body {
-      background-color:rgb(27, 27, 27);
-      overflow: hidden; 
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      position: relative;
-      color: white;
-      font-family: sans-serif;
-    }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    .heart-particle {
-      position: absolute;
-      font-size: 2rem;
-      color: #ff69b4;
-      pointer-events: none; 
-      user-select: none; 
-      animation: fallAndFade 10s linear infinite;
-      /* Dica para o navegador otimizar estas propriedades para animação */
-      will-change: transform, opacity; 
-    }
+        /* Container principal */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            text-align: center;
+            z-index: 1; /* Acima dos corações */
+        }
 
-    @keyframes fallAndFade {
-      0% {
-        opacity: 0;
-        transform: translateY(-10vh) scale(0.8) rotate(0deg);
-      }
-      10% {
-        opacity: 0.9;
-      }
-      80% {
-        opacity: 0.9;
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(110vh) scale(1.2) rotate(360deg);
-      }
-    }
+        /* Título principal */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--cor-destaque);
+        }
 
-    .content {
-      position: relative;
-      z-index: 10; 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      text-align: center;
-    }
+        /* Subtítulo */
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            font-weight: normal;
+            color: var(--cor-secundaria);
+        }
 
-    .timer-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
+        /* Área do temporizador */
+        .countdown-container {
+            background-color: var(--cor-primaria);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--sombra-suave);
+        }
 
-    .timer-box {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 1rem;
-      padding: 2rem;
-      min-width: 120px;
-    }
+        .countdown-title {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
 
-    .timer-value {
-      font-size: 3rem;
-      font-weight: bold;
-      line-height: 1;
-    }
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
 
-    .timer-label {
-      font-size: 1rem;
-      margin-top: 0.5rem;
-    }
-  </style>
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+        }
+
+        .countdown-value {
+            font-size: 2rem;
+            font-weight: bold;
+            background-color: var(--cor-texto-claro);
+            color: var(--cor-destaque);
+            border-radius: 8px;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--sombra-suave);
+        }
+
+        .countdown-label {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* Botão para abrir a cartinha */
+        .btn-cartinha {
+            background-color: var(--cor-destaque);
+            color: var(--cor-texto-claro);
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--sombra-suave);
+            margin-top: 1rem;
+        }
+
+        .btn-cartinha:hover {
+            background-color: var(--cor-secundaria);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-cartinha:active {
+            transform: translateY(0);
+        }
+
+        /* Área da cartinha */
+        .cartinha-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cartinha-container.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cartinha {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 90%;
+            width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            background-image: linear-gradient(to bottom, #fff 0%, #f9f9f9 100%);
+            border: 1px solid #f0f0f0;
+        }
+
+        .cartinha-container.active .cartinha {
+            transform: scale(1);
+        }
+
+        .cartinha-conteudo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            color: var(--cor-texto);
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .cartinha-assinatura {
+            font-family: 'Parisienne', cursive;
+            font-size: 1.8rem;
+            text-align: right;
+            color: var(--cor-destaque);
+            margin-top: 1rem;
+        }
+
+        .btn-fechar {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--cor-texto);
+            transition: color 0.3s ease;
+        }
+
+        .btn-fechar:hover {
+            color: var(--cor-destaque);
+        }
+
+        /* Estilos para os corações caindo */
+        .coracao {
+            position: absolute;
+            top: -50px;
+            color: var(--cor-secundaria);
+            font-size: 20px;
+            animation: cair linear forwards;
+            z-index: 0;
+        }
+
+        @keyframes cair {
+            to {
+                transform: translateY(calc(100vh + 50px));
+            }
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .countdown {
+                flex-wrap: wrap;
+            }
+            
+            .countdown-item {
+                min-width: 50px;
+            }
+            
+            .countdown-value {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .cartinha-conteudo {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.2rem;
+            }
+            
+            .countdown-value {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .btn-cartinha {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .cartinha {
+                padding: 1.5rem;
+            }
+            
+            .cartinha-conteudo {
+                font-size: 1.1rem;
+            }
+            
+            .cartinha-assinatura {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <script>
-    const body = document.body;
-    // Reduzimos o número de corações. Você pode experimentar valores entre 10 e 30.
-    const numberOfHearts = 20; // Um número menor pode melhorar a performance
-    const minDelay = 0;
-    const maxDelay = 8;
-    const minSize = 1.0;
-    const maxSize = 2.5;
-
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.classList.add('heart-particle');
-      heart.textContent = '❤️';
-      heart.style.left = `${Math.random() * 100}vw`;
-      const randomSize = Math.random() * (maxSize - minSize) + minSize;
-      heart.style.fontSize = `${randomSize}rem`;
-      const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
-      heart.style.animationDelay = `-${randomDelay}s`; 
-      body.appendChild(heart);
-    }
-
-    // Criamos os corações uma única vez.
-    for (let i = 0; i < numberOfHearts; i++) {
-      createHeart();
-    }
-  </script>
-
-  <div class="content">
-    <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white">Tempo para ver o MôBem </h1>
-     <br/>
-    <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8 md:mb-12 px-4">Estou contando os minútos ❤️</p>
-      
-    <div class="timer-grid">
-      <div class="timer-box">
-        <div id="days" class="timer-value">--</div>
-        <div class="timer-label">Dias</div>
-      </div>
-      <div class="timer-box">
-        <div id="hours" class="timer-value">--</div>
-        <div class="timer-label">Horas</div>
-      </div>
-      <div class="timer-box">
-        <div id="minutes" class="timer-value">--</div>
-        <div class="timer-label">Minutos</div>
-      </div>
-      <div class="timer-box">
-        <div id="seconds" class="timer-value">--</div>
-        <div class="timer-label">Segundos</div>
-      </div>
+    <!-- Container principal -->
+    <div class="container">
+        <h1>Tempo até encontrar o MôBem</h1>
+        <h2>Contando os minutos até estarmos juntos...</h2>
+        
+        <!-- Área do temporizador -->
+        <div class="countdown-container">
+            <div class="countdown-title">Faltam:</div>
+            <div class="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="dias">00</div>
+                    <div class="countdown-label">Dias</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="horas">00</div>
+                    <div class="countdown-label">Horas</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="minutos">00</div>
+                    <div class="countdown-label">Minutos</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="segundos">00</div>
+                    <div class="countdown-label">Segundos</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Botão para abrir a cartinha -->
+        <button class="btn-cartinha" id="btnAbrirCartinha">Abrir Cartinha</button>
     </div>
-  </div>
+    
+    <!-- Cartinha (inicialmente oculta) -->
+    <div class="cartinha-container" id="cartinhaContainer">
+        <div class="cartinha">
+            <button class="btn-fechar" id="btnFecharCartinha">×</button>
+            <div class="cartinha-conteudo">
+                Meu amor,
+                <br><br>
+                Cada dia ao seu lado é um presente que a vida me deu. Quando olho para trás, vejo o quanto crescemos juntos e o quanto nosso amor se fortaleceu com cada desafio que enfrentamos.
+                <br><br>
+                Você é meu porto seguro, minha inspiração e minha maior alegria. Nos seus olhos encontro paz, no seu sorriso encontro felicidade, e no seu abraço encontro meu lar.
+                <br><br>
+                Não importa quanto tempo passe, meu coração sempre baterá mais forte por você. Estou contando os dias para nosso próximo momento especial juntos.
+                <br><br>
+                Com todo meu amor,
+            </div>
+            <div class="cartinha-assinatura">Seu amor</div>
+        </div>
+    </div>
 
-  <script>
-    // Usando uma data futura para a demonstração funcionar.
-    // Lembre-se: o mês em JavaScript é de 0 a 11 (Maio é 4, Junho é 5, etc.)
-    const targetDate = new Date(2025, 05, 10, 00, 10, 30).getTime(); // 
+    <!-- Scripts -->
+    <script>
+        // Função para iniciar o temporizador
+        function iniciarTemporizador() {
+            // Data alvo (25 de Dezembro de 2025, 00:00:00)
+            
+            const dataAlvo = new Date(2025, 05, 10, 00, 10, 30).getTime(); //
+            
+            
+            // Atualiza o temporizador a cada segundo
+            const temporizador = setInterval(function() {
+                // Data e hora atuais
+                const agora = new Date().getTime();
+                
+                // Diferença entre a data alvo e a data atual
+                const diferenca = dataAlvo - agora;
+                
+                // Cálculos de tempo
+                const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+                const horas = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
+                
+                // Atualiza os elementos HTML
+                document.getElementById('dias').textContent = dias.toString().padStart(2, '0');
+                document.getElementById('horas').textContent = horas.toString().padStart(2, '0');
+                document.getElementById('minutos').textContent = minutos.toString().padStart(2, '0');
+                document.getElementById('segundos').textContent = segundos.toString().padStart(2, '0');
+                
+                // Se o temporizador chegar a zero
+                if (diferenca < 0) {
+                    clearInterval(temporizador);
+                    document.getElementById('dias').textContent = '00';
+                    document.getElementById('horas').textContent = '00';
+                    document.getElementById('minutos').textContent = '00';
+                    document.getElementById('segundos').textContent = '00';
+                }
+            }, 1000);
+        }
 
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
+        // Função para criar e animar corações caindo
+        function criarCoracoes() {
+            const body = document.querySelector('body');
+            const larguraTela = window.innerWidth;
+            
+            // Cria um novo coração a cada 300ms
+            setInterval(() => {
+                const coracao = document.createElement('div');
+                coracao.classList.add('coracao');
+                
+                // Posição horizontal aleatória
+                const posicaoX = Math.random() * larguraTela;
+                coracao.style.left = `${posicaoX}px`;
+                
+                // Tamanho aleatório
+                const tamanho = Math.random() * 20 + 10;
+                coracao.style.fontSize = `${tamanho}px`;
+                
+                // Velocidade aleatória (duração da animação)
+                const velocidade = Math.random() * 5 + 3;
+                coracao.style.animationDuration = `${velocidade}s`;
+                
+                // Opacidade aleatória
+                const opacidade = Math.random() * 0.5 + 0.5;
+                coracao.style.opacity = opacidade;
+                
+                // Conteúdo do coração (emoji)
+                coracao.innerHTML = '❤️';
+                
+                // Adiciona o coração ao body
+                body.appendChild(coracao);
+                
+                // Remove o coração após a animação terminar
+                setTimeout(() => {
+                    coracao.remove();
+                }, velocidade * 1000);
+            }, 300);
+        }
 
-      const daysElement = document.getElementById("days");
-      const hoursElement = document.getElementById("hours");
-      const minutesElement = document.getElementById("minutes");
-      const secondsElement = document.getElementById("seconds");
+        // Função para abrir a cartinha
+        function abrirCartinha() {
+            const cartinhaContainer = document.getElementById('cartinhaContainer');
+            cartinhaContainer.classList.add('active');
+        }
 
-      if (distance < 0) {
-        // Garante que o relógio finalize em "00"
-        daysElement.textContent = "00";
-        hoursElement.textContent = "00";
-        minutesElement.textContent = "00";
-        secondsElement.textContent = "00";
-        clearInterval(countdownInterval); // Para o setInterval quando o tempo acabar
-        return; 
-      }
+        // Função para fechar a cartinha
+        function fecharCartinha() {
+            const cartinhaContainer = document.getElementById('cartinhaContainer');
+            cartinhaContainer.classList.remove('active');
+        }
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      // Atualiza o DOM apenas se o valor for diferente para minimizar repaints
-      if (daysElement.textContent !== String(days).padStart(2, "0")) {
-        daysElement.textContent = String(days).padStart(2, "0");
-      }
-      if (hoursElement.textContent !== String(hours).padStart(2, "0")) {
-        hoursElement.textContent = String(hours).padStart(2, "0");
-      }
-      if (minutesElement.textContent !== String(minutes).padStart(2, "0")) {
-        minutesElement.textContent = String(minutes).padStart(2, "0");
-      }
-      if (secondsElement.textContent !== String(seconds).padStart(2, "0")) {
-        secondsElement.textContent = String(seconds).padStart(2, "0");
-      }
-    }
-
-    let countdownInterval; // Variável para armazenar a referência do intervalo
-
-    document.addEventListener("DOMContentLoaded", () => {
-      updateCountdown(); // Atualiza uma vez imediatamente para exibir os valores corretos
-      countdownInterval = setInterval(updateCountdown, 1000); // Inicia o contador
-    });
-  </script>
+        // Inicializa as funcionalidades quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicia o temporizador
+            iniciarTemporizador();
+            
+            // Inicia a animação dos corações
+            criarCoracoes();
+            
+            // Adiciona eventos aos botões
+            document.getElementById('btnAbrirCartinha').addEventListener('click', abrirCartinha);
+            document.getElementById('btnFecharCartinha').addEventListener('click', fecharCartinha);
+            
+            // Fecha a cartinha ao clicar fora dela
+            document.getElementById('cartinhaContainer').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    fecharCartinha();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
