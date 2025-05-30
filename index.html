@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Parisienne&family=Sacramento&display=swap" rel="stylesheet">
     
+    <meta name="color-scheme" content="light only">
+    
     <style>
         /* Variáveis CSS para facilitar a manutenção da paleta de cores */
         :root {
@@ -15,7 +17,7 @@
             --cor-primaria: #f8c8dc; /* Rosa claro */
             --cor-secundaria: #e6a4b4; /* Rosa médio */
             --cor-destaque: #d77fa1; /* Rosa escuro */
-            --cor-fundo: #fff5f7; /* Fundo rosa bem claro - USADO NO TEMA CLARO */
+            --cor-fundo: #fff5f7; /* Fundo rosa bem claro - USADO APENAS PARA TEMAS ROSA/CLARO GERAL */
             --cor-texto:rgb(74, 74, 74); /* Cinza escuro para texto */
             --cor-texto-claro: #ffffff; /* Branco para texto em fundos escuros */
             --sombra-suave: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -29,31 +31,32 @@
             /* Cor para a numeração do capítulo (Light Theme) */
             --cor-numeracao-capitulo: #FF5733; /* Cor específica para numeração no tema claro */
 
-            /* Variáveis para o Tema CLARO (padrão) */
-            --body-background: var(--cor-fundo); /* Fundo CLARO para o body */
+            /* Variáveis de TEMA que serão ajustadas para light/dark */
+            --body-background: #ffffff; /* FORÇA BRANCO PARA O BODY PRINCIPAL */
             --body-text-color: var(--cor-texto);
-            --card-background: #fff; /* Fundo CLARO para o cartão */
+            --card-background: #fff;
             --card-border: #f0f0f0;
             --close-button-color: var(--cor-texto);
             --countdown-bg: var(--cor-primaria);
             --countdown-title-color: var(--cor-destaque);
             --countdown-value-bg: var(--cor-texto-claro);
             --countdown-value-color: var(--cor-destaque);
-            --chapter-number-color: var(--cor-numeracao-capitulo); /* Usa a cor específica */
+            --chapter-number-color: var(--cor-numeracao-capitulo);
             --button-toggle-bg: #e0e0e0;
             --button-toggle-border: #ccc;
             --button-toggle-circle: #fff;
             --button-toggle-icon: #333;
         }
 
-        /* Variáveis para o Tema ESCURO - Quando a classe 'dark-theme' é aplicada */
+        /* Variáveis para o Tema ESCURO (quando a classe dark-theme é aplicada) */
         body.dark-theme {
-            --body-background: #1a1a1a; /* Fundo ESCURO para o body no modo escuro */
-            --body-text-color: #f0f0f0;
-            --card-background: #2a2a2a; /* Fundo ESCURO para o cartão no modo escuro */
+            /* O body-background continua branco, mas o TEXTO e outros elementos escurecem */
+            --body-text-color: #f0f0f0; /* Texto claro para fundo escuro */
+            
+            --card-background: #2a2a2a; /* Fundo escuro para o cartão da cartinha */
             --card-border: #3a3a3a;
             --close-button-color: #f0f0f0;
-            --countdown-bg: #3c3c3c;
+            --countdown-bg: #3c3c3c; /* Fundo escuro para o contador */
             --countdown-title-color: #92b0d0; /* Azul claro para destaque no escuro */
             --countdown-value-bg: #555;
             --countdown-value-color: #f0f0f0;
@@ -63,13 +66,16 @@
             --button-toggle-circle: #555;
             --button-toggle-icon: #fff;
 
-            /* Adicionalmente, ajustar cores que usam var(--cor-xxx) diretamente se necessário */
-            --cor-destaque: #92b0d0; /* Ajuste para o destaque no tema escuro */
-            --cor-secundaria: #7ba2c5; /* Ajuste para o secundário no tema escuro */
-            --dourado-claro: #CFB53B; /* Um pouco mais sutil no escuro */
+            /* Ajustes para as cores douradas no tema escuro, se aplicável */
+            --dourado-claro: #CFB53B; 
             --dourado-medio: #A48D3F;
             --dourado-escuro: #7A6A2C;
             --dourado-sombra: rgba(255, 255, 255, 0.1);
+
+            /* Ajuste para as cores principais no tema escuro, se usadas fora dos componentes */
+            --cor-destaque: #92b0d0; 
+            --cor-secundaria: #7ba2c5; 
+            --cor-primaria: #5f7a95; /* Um azul mais suave */
         }
 
         /* Reset e estilos básicos */
@@ -81,8 +87,9 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color: var(--body-background);
-            color: var(--body-text-color);
+            /* FORÇA O FUNDO BRANCO NO BODY PRINCIPAL */
+            background-color: var(--body-background) !important; 
+            color: var(--body-text-color); /* A cor do texto pode mudar com o tema */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -90,10 +97,6 @@
             justify-content: center;
             position: relative;
             transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave */
-            
-            /* ESSENCIAL: Indica ao navegador que a página prefere um esquema de cores claras. */
-            /* Isso geralmente impede que o modo escuro do sistema se sobreponha ao fundo. */
-            color-scheme: light; 
         }
 
         /* Novo container para a animação de corações */
@@ -247,9 +250,19 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); 
             transform: scale(0.9);
             transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-            /* Usamos apenas background-color aqui, sem o linear-gradient para simplificar e garantir a cor */
+            /* Usamos as variáveis de tema para o background-image também */
+            background-image: linear-gradient(to bottom, var(--card-background) 0%, rgba(var(--card-background-rgb-value, 255,255,255), 0.9) 100%); 
             border: 1px solid var(--card-border);
         }
+
+        /* Para o gradiente de cores da cartinha: precisamos de uma forma de obter os valores RGB de --card-background para o RGBA */
+        body.light-theme .cartinha {
+             background-image: linear-gradient(to bottom, var(--card-background) 0%, rgba(249, 249, 249, 0.9) 100%); 
+        }
+        body.dark-theme .cartinha {
+             background-image: linear-gradient(to bottom, var(--card-background) 0%, rgba(42, 42, 42, 0.9) 100%); 
+        }
+
 
         .cartinha-container.active .cartinha {
             transform: scale(1);
@@ -259,7 +272,7 @@
             font-family: 'Dancing Script', cursive;
             font-size: 1.5rem;
             line-height: 1.6;
-            color: var(--body-text-color); /* Uses body text color */
+            color: var(--body-text-color); /* Usa a cor do texto do body, que muda com o tema */
             text-align: left;
             margin-bottom: 1.5rem;
             transition: color 0.3s ease;
@@ -350,14 +363,12 @@
 
         .golden-divider::before {
             left: 0;
-            /* Tentativa de simular a curva externa */
             transform: translateY(-50%) skewX(-15deg);
             transform-origin: right center;
         }
 
         .golden-divider::after {
             right: 0;
-            /* Tentativa de simular a curva externa */
             transform: translateY(-50%) skewX(15deg);
             transform-origin: left center;
         }
