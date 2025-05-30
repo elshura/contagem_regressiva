@@ -11,6 +11,7 @@
     <style>
         /* Variáveis CSS para facilitar a manutenção da paleta de cores */
         :root {
+            /* Cores existentes do seu tema rosa/dourado (Light Theme) */
             --cor-primaria: #f8c8dc; /* Rosa claro */
             --cor-secundaria: #e6a4b4; /* Rosa médio */
             --cor-destaque: #d77fa1; /* Rosa escuro */
@@ -25,8 +26,50 @@
             --dourado-escuro: #B8860B; /* DarkGoldenrod */
             --dourado-sombra: rgba(0, 0, 0, 0.3);
             
-            /* Cor para a numeração esmaecida */
-            --cor-numeracao-esmaecida: rgba(74, 74, 74, 0.2); /* Tom de cinza bem claro */
+            /* Cor para a numeração do capítulo (Light Theme) */
+            --cor-numeracao-capitulo: #FF5733; /* Cor específica para numeração no tema claro */
+
+            /* Variáveis para o Tema CLARO (padrão) */
+            --body-background: var(--cor-fundo);
+            --body-text-color: var(--cor-texto);
+            --card-background: #fff;
+            --card-border: #f0f0f0;
+            --close-button-color: var(--cor-texto);
+            --countdown-bg: var(--cor-primaria);
+            --countdown-title-color: var(--cor-destaque);
+            --countdown-value-bg: var(--cor-texto-claro);
+            --countdown-value-color: var(--cor-destaque);
+            --chapter-number-color: var(--cor-numeracao-capitulo); /* Usa a cor específica */
+            --button-toggle-bg: #e0e0e0;
+            --button-toggle-border: #ccc;
+            --button-toggle-circle: #fff;
+            --button-toggle-icon: #333;
+        }
+
+        /* Variáveis para o Tema ESCURO */
+        body.dark-theme {
+            --body-background: #1a1a1a;
+            --body-text-color: #f0f0f0;
+            --card-background: #2a2a2a;
+            --card-border: #3a3a3a;
+            --close-button-color: #f0f0f0;
+            --countdown-bg: #3c3c3c;
+            --countdown-title-color: #92b0d0; /* Azul claro para destaque no escuro */
+            --countdown-value-bg: #555;
+            --countdown-value-color: #f0f0f0;
+            --chapter-number-color: #88C0D0; /* Cor específica para numeração no tema escuro */
+            --button-toggle-bg: #333;
+            --button-toggle-border: #555;
+            --button-toggle-circle: #555;
+            --button-toggle-icon: #fff;
+
+            /* Adicionalmente, ajustar cores que usam var(--cor-xxx) diretamente se necessário */
+            --cor-destaque: #92b0d0; /* Ajuste para o destaque no tema escuro */
+            --cor-secundaria: #7ba2c5; /* Ajuste para o secundário no tema escuro */
+            --dourado-claro: #CFB53B; /* Um pouco mais sutil no escuro */
+            --dourado-medio: #A48D3F;
+            --dourado-escuro: #7A6A2C;
+            --dourado-sombra: rgba(255, 255, 255, 0.1);
         }
 
         /* Reset e estilos básicos */
@@ -38,17 +81,18 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color: var(--cor-fundo);
-            color: var(--cor-texto);
+            background-color: var(--body-background);
+            color: var(--body-text-color);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave */
             
             /* Força o fundo branco, mesmo em modo escuro */
-            color-scheme: light; /* Indica que o documento prefere esquema de cores claras */
+            /* color-scheme: light; */ /* Comentado para permitir o dark-mode real */
         }
 
         /* Novo container para a animação de corações */
@@ -71,6 +115,7 @@
             text-align: center;
             z-index: 1; /* Acima dos corações */
             position: relative; /* Necessário para o z-index funcionar */
+            margin-top: 50px; /* Para não sobrepor o botão de tema */
         }
 
         /* Título principal */
@@ -78,6 +123,7 @@
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
             color: var(--cor-destaque);
+            transition: color 0.3s ease;
         }
 
         /* Subtítulo */
@@ -86,15 +132,17 @@
             margin-bottom: 2rem;
             font-weight: normal;
             color: var(--cor-secundaria);
+            transition: color 0.3s ease;
         }
 
         /* Área do temporizador */
         .countdown-container {
-            background-color: var(--cor-primaria);
+            background-color: var(--countdown-bg);
             border-radius: 15px;
             padding: 1.5rem;
             margin-bottom: 2rem;
             box-shadow: var(--sombra-suave);
+            transition: background-color 0.3s ease;
         }
 
         .countdown-title {
@@ -102,7 +150,8 @@
             font-size: 1.3rem;
             font-family: 'Dancing Script', cursive;
             font-size: 3.5rem;
-            color: var(--cor-destaque);
+            color: var(--countdown-title-color);
+            transition: color 0.3s ease;
         }
 
         .countdown {
@@ -121,8 +170,8 @@
         .countdown-value {
             font-size: 2rem;
             font-weight: bold;
-            background-color: var(--cor-texto-claro);
-            color: var(--cor-destaque);
+            background-color: var(--countdown-value-bg);
+            color: var(--countdown-value-color);
             border-radius: 8px;
             width: 60px;
             height: 60px;
@@ -130,6 +179,7 @@
             align-items: center;
             justify-content: center;
             box-shadow: var(--sombra-suave);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .countdown-label {
@@ -185,7 +235,7 @@
         }
 
         .cartinha {
-            background-color: #fff;
+            background-color: var(--card-background);
             border-radius: 10px;
             padding: 2rem;
             max-width: 90%;
@@ -193,11 +243,11 @@
             max-height: 80vh;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 10px 25px rgb(237, 237, 227);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Adjust shadow for dark theme if needed */
             transform: scale(0.9);
-            transition: transform 0.3s ease;
-            background-image: linear-gradient(to bottom, #fff 0%, #f9f9f9 100%);
-            border: 1px solid #f0f0f0;
+            transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+            background-image: linear-gradient(to bottom, var(--card-background) 0%, rgba(var(--card-background-rgb-value), 0.9) 100%); /* Adjusted for theme */
+            border: 1px solid var(--card-border);
         }
 
         .cartinha-container.active .cartinha {
@@ -208,9 +258,10 @@
             font-family: 'Dancing Script', cursive;
             font-size: 1.5rem;
             line-height: 1.6;
-            color: var(--cor-texto);
+            color: var(--body-text-color); /* Uses body text color */
             text-align: left;
             margin-bottom: 1.5rem;
+            transition: color 0.3s ease;
         }
 
         .cartinha-section {
@@ -229,7 +280,8 @@
             right: 0;
             font-size: 1.2rem;
             font-weight: bold;
-            color: var(--cor-numeracao-esmaecida); /* Cor esmaecida */
+            color: var(--chapter-number-color); /* Usa a nova variável de cor para numeração */
+            transition: color 0.3s ease;
         }
 
         .cartinha-assinatura {
@@ -238,6 +290,7 @@
             text-align: right;
             color: var(--cor-destaque);
             margin-top: 1rem;
+            transition: color 0.3s ease;
         }
 
         .btn-fechar {
@@ -248,7 +301,7 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: var(--cor-texto);
+            color: var(--close-button-color);
             transition: color 0.3s ease;
         }
 
@@ -372,6 +425,67 @@
 
         /* --- Fim do Estilo da Divisória Dourada --- */
 
+        /* Theme Toggle Button Styling */
+        .theme-toggle-button {
+            position: fixed; /* Fixes it relative to the viewport */
+            top: 20px;
+            right: 20px;
+            background-color: var(--button-toggle-bg);
+            border: 1px solid var(--button-toggle-border);
+            border-radius: 20px; /* Rounded corners for the button container */
+            width: 60px; /* Adjust width and height to match your image */
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0;
+            overflow: hidden; /* Hide parts of the icon outside the button */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            z-index: 1000; /* Ensure it's above other content */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle-button::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px; /* Position for light mode (sun) */
+            width: 26px; /* Size of the movable circle */
+            height: 26px;
+            background-color: var(--button-toggle-circle);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Move the circle for dark mode */
+        .dark-theme .theme-toggle-button::before {
+            transform: translateX(30px); /* Adjust to move to the right side (60px - 26px - 2px = 32px roughly) */
+        }
+
+        .theme-icon {
+            width: 20px; /* Adjust icon size */
+            height: 20px;
+            position: absolute;
+            color: var(--button-toggle-icon); /* To color SVG icons if used */
+            transition: opacity 0.3s ease, color 0.3s ease;
+        }
+
+        .sun-icon {
+            left: 8px; /* Position the sun icon */
+            top: 5px;
+        }
+
+        .moon-icon {
+            right: 8px; /* Position the moon icon */
+            top: 5px;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none; /* Make it unclickable when hidden */
+        }
+
         /* Estilos responsivos */
         @media (max-width: 768px) {
             h1 {
@@ -477,8 +591,18 @@
         }
     </style>
 </head>
-<body>
+<body class="light-theme">
     <div class="heart-animation-container"></div>
+
+    <button id="theme-toggle" class="theme-toggle-button" aria-label="Alternar tema claro/escuro">
+        <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36a5.002 5.002 0 0 1-7.89-5.69C10.74 3.09 11.36 3 12 3zm0 2a7 7 0 1 0 0 14c-1.39 0-2.73-.25-3.98-.73C5.7 17.5 4 14.9 4 12c0-3.31 2.69-6 6-6h2c.07 0 .14.01.2.02a6.99 6.99 0 0 1 .8.09 5 5 0 0 1 1.76-1.76A8.985 8.985 0 0 0 12 3zM12 5.5l1.5-1.5L12 2.5l-1.5 1.5L12 5.5zm0 13l-1.5 1.5L12 21.5l1.5-1.5L12 18.5zm5.5-5.5l1.5-1.5L21.5 12l-1.5 1.5L17.5 12zm-11 0l-1.5-1.5L2.5 12l1.5 1.5L6.5 12z"/>
+        </svg>
+
+        <svg class="theme-icon moon-icon hidden" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3a9 9 0 0 0 9 9c0 4.97-4.03 9-9 9a9 9 0 0 1 0-18z"/>
+        </svg>
+    </button>
 
     <div class="container">
         <h1>Tempo até encontrar o MôBem</h1>
@@ -514,7 +638,7 @@
             <button class="btn-fechar" id="btnFecharCartinha">×</button>
             <div class="cartinha-conteudo">
 
-            <div class="cartinha-section">
+                <div class="cartinha-section">
                     <span class="cartinha-section-number"> 3 </span>
                     Meu Amor,
                     <br><br>
@@ -528,7 +652,7 @@
 
                 </div>
 
-             <div class="golden-divider">
+               <div class="golden-divider">
                     <div class="golden-divider-center"></div>
                     <div class="golden-divider-center-left"></div>
                     <div class="golden-divider-center-right"></div>
@@ -555,7 +679,7 @@
                 
                 <div class="cartinha-section">
                     <span class="cartinha-section-number"> 1 </span>
-                    Meu amor,                                                          
+                    Meu amor,                                                           
                     <br><br>
                     Cada dia ao seu lado é um presente que a vida me deu. Quando olho para trás, vejo o quanto crescemos juntos e o quanto nosso amor se fortaleceu com cada desafio que enfrentamos.
                     <br><br>
@@ -659,6 +783,29 @@
             cartinhaContainer.classList.remove('active');
         }
 
+        // FUNÇÕES PARA O TEMA CLARO/ESCURO
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+
+        // Function to apply the theme to the body and update icon visibility
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                body.classList.add('dark-theme');
+                body.classList.remove('light-theme');
+                sunIcon.classList.add('hidden'); // Hide sun
+                moonIcon.classList.remove('hidden'); // Show moon
+                localStorage.setItem('theme', 'dark'); // Save preference
+            } else {
+                body.classList.add('light-theme');
+                body.classList.remove('dark-theme');
+                sunIcon.classList.remove('hidden'); // Show sun
+                moonIcon.classList.add('hidden'); // Hide moon
+                localStorage.setItem('theme', 'light'); // Save preference
+            }
+        }
+
         // Inicializa as funcionalidades quando o DOM estiver carregado
         document.addEventListener('DOMContentLoaded', function() {
             // Inicia o temporizador
@@ -675,6 +822,24 @@
             document.getElementById('cartinhaContainer').addEventListener('click', function(e) {
                 if (e.target === this) {
                     fecharCartinha();
+                }
+            });
+
+            // Check for saved theme preference on page load
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else {
+                // Default to light theme if no preference is saved
+                applyTheme('light');
+            }
+
+            // Toggle theme on button click
+            themeToggleBtn.addEventListener('click', () => {
+                if (body.classList.contains('dark-theme')) {
+                    applyTheme('light');
+                } else {
+                    applyTheme('dark');
                 }
             });
         });
