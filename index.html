@@ -8,17 +8,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Parisienne&family=Sacramento&display=swap" rel="stylesheet">
     
-    <meta name="color-scheme" content="light only">
+    <meta name="color-scheme" content="light dark"> 
     
     <style>
         /* Variáveis CSS para facilitar a manutenção da paleta de cores */
+        /* Estilos padrão (tema CLARO) */
         :root {
-            /* Cores existentes do seu tema rosa/dourado (Light Theme) */
             --cor-primaria: #f8c8dc; /* Rosa claro */
             --cor-secundaria: #e6a4b4; /* Rosa médio */
             --cor-destaque: #d77fa1; /* Rosa escuro */
-            --cor-fundo: #fff5f7; /* Fundo rosa bem claro - USADO APENAS PARA TEMAS ROSA/CLARO GERAL */
-            --cor-texto:rgb(74, 74, 74); /* Cinza escuro para texto */
+            --cor-fundo: #fff5f7; /* Fundo rosa bem claro */
+            --cor-texto: rgb(74, 74, 74); /* Cinza escuro para texto */
             --cor-texto-claro: #ffffff; /* Branco para texto em fundos escuros */
             --sombra-suave: 0 4px 6px rgba(0, 0, 0, 0.1);
 
@@ -28,11 +28,11 @@
             --dourado-escuro: #B8860B; /* DarkGoldenrod */
             --dourado-sombra: rgba(0, 0, 0, 0.3);
             
-            /* Cor para a numeração do capítulo (Light Theme) */
-            --cor-numeracao-capitulo: #FF5733; /* Cor específica para numeração no tema claro */
+            /* Cor para a numeração do capítulo */
+            --cor-numeracao-capitulo: #FF5733; 
 
-            /* Variáveis de TEMA que serão ajustadas para light/dark */
-            --body-background: #ffffff; /* FORÇA BRANCO PARA O BODY PRINCIPAL */
+            /* Variáveis para o Tema CLARO (padrão) */
+            --body-background: var(--cor-fundo);
             --body-text-color: var(--cor-texto);
             --card-background: #fff;
             --card-border: #f0f0f0;
@@ -41,22 +41,21 @@
             --countdown-title-color: var(--cor-destaque);
             --countdown-value-bg: var(--cor-texto-claro);
             --countdown-value-color: var(--cor-destaque);
-            --chapter-number-color: var(--cor-numeracao-capitulo);
+            --chapter-number-color: var(--cor-numeracao-capitulo); 
             --button-toggle-bg: #e0e0e0;
             --button-toggle-border: #ccc;
             --button-toggle-circle: #fff;
             --button-toggle-icon: #333;
         }
 
-        /* Variáveis para o Tema ESCURO (quando a classe dark-theme é aplicada) */
+        /* Variáveis para o Tema ESCURO (aplicadas via classe .dark-theme) */
         body.dark-theme {
-            /* O body-background continua branco, mas o TEXTO e outros elementos escurecem */
-            --body-text-color: #f0f0f0; /* Texto claro para fundo escuro */
-            
-            --card-background: #2a2a2a; /* Fundo escuro para o cartão da cartinha */
+            --body-background: #1a1a1a;
+            --body-text-color: #f0f0f0;
+            --card-background: #2a2a2a;
             --card-border: #3a3a3a;
             --close-button-color: #f0f0f0;
-            --countdown-bg: #3c3c3c; /* Fundo escuro para o contador */
+            --countdown-bg: #3c3c3c;
             --countdown-title-color: #92b0d0; /* Azul claro para destaque no escuro */
             --countdown-value-bg: #555;
             --countdown-value-color: #f0f0f0;
@@ -66,16 +65,13 @@
             --button-toggle-circle: #555;
             --button-toggle-icon: #fff;
 
-            /* Ajustes para as cores douradas no tema escuro, se aplicável */
+            /* Ajustes para as cores que usam var(--cor-xxx) diretamente */
+            --cor-destaque: #92b0d0; 
+            --cor-secundaria: #7ba2c5; 
             --dourado-claro: #CFB53B; 
             --dourado-medio: #A48D3F;
             --dourado-escuro: #7A6A2C;
             --dourado-sombra: rgba(255, 255, 255, 0.1);
-
-            /* Ajuste para as cores principais no tema escuro, se usadas fora dos componentes */
-            --cor-destaque: #92b0d0; 
-            --cor-secundaria: #7ba2c5; 
-            --cor-primaria: #5f7a95; /* Um azul mais suave */
         }
 
         /* Reset e estilos básicos */
@@ -87,9 +83,8 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            /* FORÇA O FUNDO BRANCO NO BODY PRINCIPAL */
-            background-color: var(--body-background) !important; 
-            color: var(--body-text-color); /* A cor do texto pode mudar com o tema */
+            background-color: var(--body-background);
+            color: var(--body-text-color);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -106,9 +101,9 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            overflow: hidden; /* Isso vai cortar os corações que saem da tela */
-            pointer-events: none; /* Permite interagir com os elementos por baixo */
-            z-index: 0; /* Garante que fique no fundo */
+            overflow: hidden; 
+            pointer-events: none; 
+            z-index: 0; 
         }
 
         /* Container principal */
@@ -117,8 +112,8 @@
             max-width: 800px;
             padding: 2rem;
             text-align: center;
-            z-index: 1; /* Acima dos corações */
-            position: relative; /* Necessário para o z-index funcionar */
+            z-index: 1; 
+            position: relative; 
             margin-top: 50px; /* Para não sobrepor o botão de tema */
         }
 
@@ -250,17 +245,17 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); 
             transform: scale(0.9);
             transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-            /* Usamos as variáveis de tema para o background-image também */
-            background-image: linear-gradient(to bottom, var(--card-background) 0%, rgba(var(--card-background-rgb-value, 255,255,255), 0.9) 100%); 
+            background-image: linear-gradient(to bottom, var(--card-background) 0%, rgba(var(--card-background-rgb-value), 0.9) 100%); 
             border: 1px solid var(--card-border);
         }
-
-        /* Para o gradiente de cores da cartinha: precisamos de uma forma de obter os valores RGB de --card-background para o RGBA */
+        /* Para o gradiente da cartinha, precisamos converter a cor de fundo RGB se usarmos var(--card-background) diretamente. 
+           Uma alternativa mais simples é usar uma cor sólida ou ajustar o gradiente para ser menos dependente de var().
+           Por simplicidade e compatibilidade, vou usar uma cor sólida e leve variação. */
         body.light-theme .cartinha {
-             background-image: linear-gradient(to bottom, var(--card-background) 0%, rgba(249, 249, 249, 0.9) 100%); 
+            background-image: linear-gradient(to bottom, #fff 0%, #f9f9f9 100%);
         }
         body.dark-theme .cartinha {
-             background-image: linear-gradient(to bottom, var(--card-background) 0%, rgba(42, 42, 42, 0.9) 100%); 
+            background-image: linear-gradient(to bottom, #2a2a2a 0%, #353535 100%);
         }
 
 
@@ -272,20 +267,20 @@
             font-family: 'Dancing Script', cursive;
             font-size: 1.5rem;
             line-height: 1.6;
-            color: var(--body-text-color); /* Usa a cor do texto do body, que muda com o tema */
+            color: var(--body-text-color); 
             text-align: left;
             margin-bottom: 1.5rem;
             transition: color 0.3s ease;
         }
 
         .cartinha-section {
-            position: relative; /* Para posicionar a numeração */
-            margin-bottom: 1.5rem; /* Espaço entre as seções */
-            padding-top: 20px; /* Para dar espaço à numeração */
+            position: relative; 
+            margin-bottom: 1.5rem; 
+            padding-top: 20px; 
         }
 
         .cartinha-section.first {
-            padding-top: 0; /* A primeira seção não precisa de padding extra no topo */
+            padding-top: 0; 
         }
 
         .cartinha-section-number {
@@ -294,7 +289,7 @@
             right: 0;
             font-size: 1.2rem;
             font-weight: bold;
-            color: var(--chapter-number-color); /* Usa a nova variável de cor para numeração */
+            color: var(--chapter-number-color); 
             transition: color 0.3s ease;
         }
 
@@ -341,9 +336,9 @@
         /* --- Estilo da Divisória Dourada (Referência de Imagem) --- */
         .golden-divider {
             position: relative;
-            width: 90%; /* Ajuste a largura conforme desejar */
+            width: 90%; 
             max-width: 400px;
-            height: 25px; /* Altura total do design */
+            height: 25px; 
             margin: 2rem auto;
             display: flex;
             align-items: center;
@@ -354,8 +349,8 @@
         .golden-divider::after {
             content: '';
             position: absolute;
-            width: 40%; /* Largura das linhas laterais */
-            height: 3px; /* Espessura das linhas */
+            width: 40%; 
+            height: 3px; 
             background: linear-gradient(to right, var(--dourado-claro), var(--dourado-medio), var(--dourado-escuro));
             box-shadow: 0 1px 3px var(--dourado-sombra);
             border-radius: 2px;
@@ -375,11 +370,11 @@
 
         .golden-divider-center {
             position: relative;
-            z-index: 1; /* Para ficar acima das linhas */
-            width: 50px; /* Tamanho do elemento central */
+            z-index: 1; 
+            width: 50px; 
             height: 20px;
             background: linear-gradient(to bottom, var(--dourado-medio), var(--dourado-escuro));
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Forma de losango */
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); 
             box-shadow: 0 2px 5px var(--dourado-sombra);
             display: flex;
             align-items: center;
@@ -389,12 +384,11 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
-        /* Detalhes para simular as "gotas" e "volutas" na imagem */
         .golden-divider-center::before,
         .golden-divider-center::after {
             content: '';
             position: absolute;
-            width: 8px; /* Tamanho das "gotas" */
+            width: 8px; 
             height: 8px;
             background-color: var(--dourado-claro);
             border-radius: 50%;
@@ -402,25 +396,24 @@
         }
 
         .golden-divider-center::before {
-            top: -5px; /* Posição acima do losango */
+            top: -5px; 
             left: 50%;
             transform: translateX(-50%);
         }
 
         .golden-divider-center::after {
-            bottom: -5px; /* Posição abaixo do losango */
+            bottom: -5px; 
             left: 50%;
             transform: translateX(-50%);
         }
 
-        /* Pequenos detalhes nas laterais do centro, como as "folhinhas" */
         .golden-divider-center-left,
         .golden-divider-center-right {
             position: absolute;
             width: 15px;
             height: 10px;
             background: var(--dourado-medio);
-            clip-path: ellipse(50% 50% at 50% 50%); /* Forma elíptica */
+            clip-path: ellipse(50% 50% at 50% 50%); 
             box-shadow: 0 1px 2px var(--dourado-sombra);
             z-index: 0;
         }
@@ -439,21 +432,21 @@
 
         /* Theme Toggle Button Styling */
         .theme-toggle-button {
-            position: fixed; /* Fixes it relative to the viewport */
+            position: fixed; 
             top: 20px;
             right: 20px;
             background-color: var(--button-toggle-bg);
             border: 1px solid var(--button-toggle-border);
-            border-radius: 20px; /* Rounded corners for the button container */
-            width: 60px; /* Adjust width and height to match your image */
+            border-radius: 20px; 
+            width: 60px; 
             height: 30px;
             cursor: pointer;
             display: flex;
             align-items: center;
             padding: 0;
-            overflow: hidden; /* Hide parts of the icon outside the button */
+            overflow: hidden; 
             transition: background-color 0.3s ease, border-color 0.3s ease;
-            z-index: 1000; /* Ensure it's above other content */
+            z-index: 1000; 
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
@@ -461,8 +454,8 @@
             content: '';
             position: absolute;
             top: 2px;
-            left: 2px; /* Position for light mode (sun) */
-            width: 26px; /* Size of the movable circle */
+            left: 2px; 
+            width: 26px; 
             height: 26px;
             background-color: var(--button-toggle-circle);
             border-radius: 50%;
@@ -470,32 +463,32 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
-        /* Move the circle for dark mode */
-        .dark-theme .theme-toggle-button::before {
-            transform: translateX(30px); /* Adjust to move to the right side (60px - 26px - 2px = 32px roughly) */
+        /* Move o círculo para o modo escuro */
+        body.dark-theme .theme-toggle-button::before {
+            transform: translateX(30px); 
         }
 
         .theme-icon {
-            width: 20px; /* Adjust icon size */
+            width: 20px; 
             height: 20px;
             position: absolute;
-            color: var(--button-toggle-icon); /* To color SVG icons if used */
+            color: var(--button-toggle-icon); 
             transition: opacity 0.3s ease, color 0.3s ease;
         }
 
         .sun-icon {
-            left: 8px; /* Position the sun icon */
+            left: 8px; 
             top: 5px;
         }
 
         .moon-icon {
-            right: 8px; /* Position the moon icon */
+            right: 8px; 
             top: 5px;
         }
 
         .hidden {
             opacity: 0;
-            pointer-events: none; /* Make it unclickable when hidden */
+            pointer-events: none; 
         }
 
         /* Estilos responsivos */
@@ -709,30 +702,24 @@
     <script>
         // Função para iniciar o temporizador
         function iniciarTemporizador() {
-            // Data alvo (25 de Dezembro de 2025, 00:00:00)
-            const dataAlvo = new Date(2025, 05, 10, 00, 10, 30).getTime(); // Ajuste a data aqui
+            // Data alvo (10 de Junho de 2025, 00:10:30) - Lembre-se que o mês é 0-indexado (Janeiro=0, Junho=5)
+            const dataAlvo = new Date(2025, 5, 10, 00, 10, 30).getTime(); 
             
             // Atualiza o temporizador a cada segundo
             const temporizador = setInterval(function() {
-                // Data e hora atuais
                 const agora = new Date().getTime();
-                
-                // Diferença entre a data alvo e a data atual
                 const diferenca = dataAlvo - agora;
                 
-                // Cálculos de tempo
                 const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
                 const horas = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
                 const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
                 
-                // Atualiza os elementos HTML
                 document.getElementById('dias').textContent = dias.toString().padStart(2, '0');
                 document.getElementById('horas').textContent = horas.toString().padStart(2, '0');
                 document.getElementById('minutos').textContent = minutos.toString().padStart(2, '0');
                 document.getElementById('segundos').textContent = segundos.toString().padStart(2, '0');
                 
-                // Se o temporizador chegar a zero
                 if (diferenca < 0) {
                     clearInterval(temporizador);
                     document.getElementById('dias').textContent = '00';
@@ -745,38 +732,29 @@
 
         // Função para criar e animar corações caindo
         function criarCoracoes() {
-            // Seleciona o novo container para os corações
             const heartContainer = document.querySelector('.heart-animation-container');
             const larguraTela = window.innerWidth;
             
-            // Cria um novo coração a cada 300ms
             setInterval(() => {
                 const coracao = document.createElement('div');
                 coracao.classList.add('coracao');
                 
-                // Posição horizontal aleatória
                 const posicaoX = Math.random() * larguraTela;
                 coracao.style.left = `${posicaoX}px`;
                 
-                // Tamanho aleatório
                 const tamanho = Math.random() * 20 + 10;
                 coracao.style.fontSize = `${tamanho}px`;
                 
-                // Velocidade aleatória (duração da animação)
                 const velocidade = Math.random() * 5 + 3;
                 coracao.style.animationDuration = `${velocidade}s`;
                 
-                // Opacidade aleatória
                 const opacidade = Math.random() * 0.5 + 0.5;
                 coracao.style.opacity = opacidade;
                 
-                // Conteúdo do coração (emoji)
                 coracao.innerHTML = '❤️';
                 
-                // Adiciona o coração ao novo container
                 heartContainer.appendChild(coracao);
                 
-                // Remove o coração após a animação terminar
                 setTimeout(() => {
                     coracao.remove();
                 }, velocidade * 1000);
@@ -801,20 +779,20 @@
         const sunIcon = document.querySelector('.sun-icon');
         const moonIcon = document.querySelector('.moon-icon');
 
-        // Function to apply the theme to the body and update icon visibility
+        // Função para aplicar o tema ao body e atualizar a visibilidade dos ícones
         function applyTheme(theme) {
             if (theme === 'dark') {
                 body.classList.add('dark-theme');
                 body.classList.remove('light-theme');
-                sunIcon.classList.add('hidden'); // Hide sun
-                moonIcon.classList.remove('hidden'); // Show moon
-                localStorage.setItem('theme', 'dark'); // Save preference
-            } else {
+                sunIcon.classList.add('hidden'); // Esconde o sol
+                moonIcon.classList.remove('hidden'); // Mostra a lua
+                localStorage.setItem('theme', 'dark'); // Salva a preferência
+            } else { // theme === 'light'
                 body.classList.add('light-theme');
                 body.classList.remove('dark-theme');
-                sunIcon.classList.remove('hidden'); // Show sun
-                moonIcon.classList.add('hidden'); // Hide moon
-                localStorage.setItem('theme', 'light'); // Save preference
+                sunIcon.classList.remove('hidden'); // Mostra o sol
+                moonIcon.classList.add('hidden'); // Esconde a lua
+                localStorage.setItem('theme', 'light'); // Salva a preferência
             }
         }
 
@@ -837,16 +815,25 @@
                 }
             });
 
-            // Check for saved theme preference on page load
+            // Lógica para determinar o tema inicial:
+            // 1. Verifica se há uma preferência salva no localStorage
             const savedTheme = localStorage.getItem('theme');
+
             if (savedTheme) {
+                // Se sim, aplica o tema salvo
                 applyTheme(savedTheme);
             } else {
-                // Default to light theme if no preference is saved
-                applyTheme('light');
+                // Se não, verifica a preferência do sistema operacional
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    // Se o sistema está em modo escuro, aplica o tema escuro
+                    applyTheme('dark');
+                } else {
+                    // Caso contrário (sistema em modo claro ou não detectado), aplica o tema claro
+                    applyTheme('light');
+                }
             }
 
-            // Toggle theme on button click
+            // Alterna o tema ao clicar no botão
             themeToggleBtn.addEventListener('click', () => {
                 if (body.classList.contains('dark-theme')) {
                     applyTheme('light');
