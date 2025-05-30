@@ -18,6 +18,15 @@
             --cor-texto:rgb(74, 74, 74); /* Cinza escuro para texto */
             --cor-texto-claro: #ffffff; /* Branco para texto em fundos escuros */
             --sombra-suave: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+            /* Cores para o efeito dourado */
+            --dourado-claro: #FFD700; /* Ouro */
+            --dourado-medio: #DAA520; /* Goldenrod */
+            --dourado-escuro: #B8860B; /* DarkGoldenrod */
+            --dourado-sombra: rgba(0, 0, 0, 0.3);
+            
+            /* Cor para a numeração esmaecida */
+            --cor-numeracao-esmaecida: rgba(74, 74, 74, 0.2); /* Tom de cinza bem claro */
         }
 
         /* Reset e estilos básicos */
@@ -36,8 +45,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* Removido overflow-x: hidden; daqui, pois o container de corações cuidará disso */
             position: relative;
+            
+            /* Força o fundo branco, mesmo em modo escuro */
+            color-scheme: light; /* Indica que o documento prefere esquema de cores claras */
         }
 
         /* Novo container para a animação de corações */
@@ -89,8 +100,7 @@
         .countdown-title {
             margin-bottom: 1rem;
             font-size: 1.3rem;
-            /* Corrigido o estilo inline para CSS */
-            font-family: 'Dancing Script', cursive; /* Usei Dancing Script como exemplo, já importada */
+            font-family: 'Dancing Script', cursive;
             font-size: 3.5rem;
             color: var(--cor-destaque);
         }
@@ -170,7 +180,7 @@
         }
 
         .cartinha-container.active {
-            opacity: 10;
+            opacity: 1;
             visibility: visible;
         }
 
@@ -201,6 +211,25 @@
             color: var(--cor-texto);
             text-align: left;
             margin-bottom: 1.5rem;
+        }
+
+        .cartinha-section {
+            position: relative; /* Para posicionar a numeração */
+            margin-bottom: 1.5rem; /* Espaço entre as seções */
+            padding-top: 20px; /* Para dar espaço à numeração */
+        }
+
+        .cartinha-section.first {
+            padding-top: 0; /* A primeira seção não precisa de padding extra no topo */
+        }
+
+        .cartinha-section-number {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--cor-numeracao-esmaecida); /* Cor esmaecida */
         }
 
         .cartinha-assinatura {
@@ -234,7 +263,6 @@
             color: var(--cor-secundaria);
             font-size: 20px;
             animation: cair linear forwards;
-            /* z-index: 0; - Removido daqui, pois o heart-animation-container já define o z-index */
         }
 
         @keyframes cair {
@@ -242,6 +270,107 @@
                 transform: translateY(calc(100vh + 50px));
             }
         }
+
+        /* --- Estilo da Divisória Dourada (Referência de Imagem) --- */
+        .golden-divider {
+            position: relative;
+            width: 90%; /* Ajuste a largura conforme desejar */
+            max-width: 400px;
+            height: 25px; /* Altura total do design */
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .golden-divider::before,
+        .golden-divider::after {
+            content: '';
+            position: absolute;
+            width: 40%; /* Largura das linhas laterais */
+            height: 3px; /* Espessura das linhas */
+            background: linear-gradient(to right, var(--dourado-claro), var(--dourado-medio), var(--dourado-escuro));
+            box-shadow: 0 1px 3px var(--dourado-sombra);
+            border-radius: 2px;
+        }
+
+        .golden-divider::before {
+            left: 0;
+            /* Tentativa de simular a curva externa */
+            transform: translateY(-50%) skewX(-15deg);
+            transform-origin: right center;
+        }
+
+        .golden-divider::after {
+            right: 0;
+            /* Tentativa de simular a curva externa */
+            transform: translateY(-50%) skewX(15deg);
+            transform-origin: left center;
+        }
+
+        .golden-divider-center {
+            position: relative;
+            z-index: 1; /* Para ficar acima das linhas */
+            width: 50px; /* Tamanho do elemento central */
+            height: 20px;
+            background: linear-gradient(to bottom, var(--dourado-medio), var(--dourado-escuro));
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Forma de losango */
+            box-shadow: 0 2px 5px var(--dourado-sombra);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--cor-texto-claro);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Detalhes para simular as "gotas" e "volutas" na imagem */
+        .golden-divider-center::before,
+        .golden-divider-center::after {
+            content: '';
+            position: absolute;
+            width: 8px; /* Tamanho das "gotas" */
+            height: 8px;
+            background-color: var(--dourado-claro);
+            border-radius: 50%;
+            box-shadow: 0 1px 2px var(--dourado-sombra);
+        }
+
+        .golden-divider-center::before {
+            top: -5px; /* Posição acima do losango */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .golden-divider-center::after {
+            bottom: -5px; /* Posição abaixo do losango */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Pequenos detalhes nas laterais do centro, como as "folhinhas" */
+        .golden-divider-center-left,
+        .golden-divider-center-right {
+            position: absolute;
+            width: 15px;
+            height: 10px;
+            background: var(--dourado-medio);
+            clip-path: ellipse(50% 50% at 50% 50%); /* Forma elíptica */
+            box-shadow: 0 1px 2px var(--dourado-sombra);
+            z-index: 0;
+        }
+
+        .golden-divider-center-left {
+            left: -10px;
+            transform: rotate(-30deg);
+        }
+
+        .golden-divider-center-right {
+            right: -10px;
+            transform: rotate(30deg);
+        }
+
+        /* --- Fim do Estilo da Divisória Dourada --- */
 
         /* Estilos responsivos */
         @media (max-width: 768px) {
@@ -269,6 +398,30 @@
             
             .cartinha-conteudo {
                 font-size: 1.3rem;
+            }
+
+            .golden-divider {
+                width: 95%;
+                height: 20px;
+            }
+            .golden-divider::before,
+            .golden-divider::after {
+                width: 35%;
+            }
+            .golden-divider-center {
+                width: 40px;
+                height: 16px;
+                font-size: 1rem;
+            }
+            .golden-divider-center::before,
+            .golden-divider-center::after {
+                width: 6px;
+                height: 6px;
+            }
+            .golden-divider-center-left,
+            .golden-divider-center-right {
+                width: 12px;
+                height: 8px;
             }
         }
 
@@ -306,6 +459,20 @@
             
             .cartinha-assinatura {
                 font-size: 1.5rem;
+            }
+
+            .golden-divider {
+                width: 100%;
+                height: 18px;
+            }
+            .golden-divider::before,
+            .golden-divider::after {
+                width: 30%;
+            }
+            .golden-divider-center {
+                width: 30px;
+                height: 12px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -346,28 +513,37 @@
         <div class="cartinha">
             <button class="btn-fechar" id="btnFecharCartinha">×</button>
             <div class="cartinha-conteudo">
-                <br><br>
-                [2] Querida MôBem,
-                <br><br>
-                Soube que te amava porque não penso em você só quando estou sozinho.
-                <br><br>
-                Penso mesmo quando estou trabalhando, quando estou me divertindo, e mesmo quando estou com família, com amigos. Independente da hora do meu dia, ainda assim queria você ali.
-                <br><br>
-                Eu amo tudo em você — o jeito que fala, seu sorriso, sua risada tentando conter o mundo.
-                <br><br>
-                E mesmo que leia isso à noite, ou amanhã com o sol no rosto... só quero que saiba: eu te amo ❤️.
-                <br><br>
-                ---------------------------------------
-                <br><br>
-                [1] Meu amor,                                                                           
-                <br><br>
-                Cada dia ao seu lado é um presente que a vida me deu. Quando olho para trás, vejo o quanto crescemos juntos e o quanto nosso amor se fortaleceu com cada desafio que enfrentamos.
-                <br><br>
-                Você é meu porto seguro, minha inspiração e minha maior alegria. Nos seus olhos encontro paz, no seu sorriso encontro felicidade, e no seu abraço encontro meu lar.
-                <br><br>
-                Não importa quanto tempo passe, meu coração sempre baterá mais forte por você. Estou contando os dias para nosso próximo momento especial juntos.
-                <br><br>
-                Com todo meu amor,
+                <div class="cartinha-section">
+                    <span class="cartinha-section-number"> [2] </span>
+                    Querida MôBem,
+                    <br><br>
+                    Soube que te amava porque não penso em você só quando estou sozinho.
+                    <br><br>
+                    Penso mesmo quando estou trabalhando, quando estou me divertindo, e mesmo quando estou com família, com amigos. Independente da hora do meu dia, ainda assim queria você ali.
+                    <br><br>
+                    Eu amo tudo em você — o jeito que fala, seu sorriso, sua risada tentando conter o mundo.
+                    <br><br>
+                    E mesmo que leia isso à noite, ou amanhã com o sol no rosto... só quero que saiba: eu te amo ❤️.
+                </div>
+                
+                <div class="golden-divider">
+                    <div class="golden-divider-center"></div>
+                    <div class="golden-divider-center-left"></div>
+                    <div class="golden-divider-center-right"></div>
+                </div>
+                
+                <div class="cartinha-section">
+                    <span class="cartinha-section-number"> [1] </span>
+                    Meu amor,                                                          
+                    <br><br>
+                    Cada dia ao seu lado é um presente que a vida me deu. Quando olho para trás, vejo o quanto crescemos juntos e o quanto nosso amor se fortaleceu com cada desafio que enfrentamos.
+                    <br><br>
+                    Você é meu porto seguro, minha inspiração e minha maior alegria. Nos seus olhos encontro paz, no seu sorriso encontro felicidade, e no seu abraço encontro meu lar.
+                    <br><br>
+                    Não importa quanto tempo passe, meu coração sempre baterá mais forte por você. Estou contando os dias para nosso próximo momento especial juntos.
+                    <br><br>
+                    Com todo meu amor,
+                </div>
             </div>
             <div class="cartinha-assinatura">Seu Môbem ❤️</div>
         </div>
