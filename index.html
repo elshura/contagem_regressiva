@@ -50,6 +50,14 @@
             --chat-button-bg: var(--cor-destaque);
             --chat-button-text: var(--cor-texto-claro);
             --chat-main-bg: #ffffff; /* Fundo para a área do chat na página principal */
+
+            /* Message actions */
+            --message-action-btn-bg: #eee;
+            --message-action-btn-color: var(--cor-texto);
+            --message-action-btn-hover-bg: var(--cor-secundaria);
+            --message-action-btn-hover-color: var(--cor-texto-claro);
+            --message-edit-bg: #f9f9f9;
+            --message-edit-border: var(--cor-secundaria);
         }
 
         /* Variáveis para o Tema ESCURO (aplicadas via classe .dark-theme) */
@@ -81,6 +89,14 @@
             --chat-button-bg: #7ba2c5;
             --chat-button-text: #f0f0f0;
             --chat-main-bg: #2a2a2a; /* Fundo para a área do chat na página principal (escuro) */
+
+            /* Message actions */
+            --message-action-btn-bg: #4a4a4a;
+            --message-action-btn-color: #f0f0f0;
+            --message-action-btn-hover-bg: #7ba2c5;
+            --message-action-btn-hover-color: #f0f0f0;
+            --message-edit-bg: #333;
+            --message-edit-border: #7ba2c5;
         }
 
         /* Reset e estilos básicos */
@@ -522,7 +538,7 @@
         }
 
         /* Estilos para as mensagens do chat dentro da cartinha */
-        .message-entry {
+        .message-entry-wrapper {
             margin-top: 1em; /* Espaçamento entre mensagens ou entre o poema e a primeira mensagem */
             padding: 0.8em 1.2em;
             background-color: var(--chat-input-bg); /* Reutiliza a cor do input para as mensagens */
@@ -535,7 +551,70 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             word-wrap: break-word; /* Garante que palavras longas quebrem */
             white-space: pre-wrap; /* Preserva quebras de linha e espaços do textarea */
+            position: relative; /* Para posicionar os botões de ação */
+            margin-bottom: 20px; /* Adiciona espaço para a divisória */
         }
+
+        .message-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+            opacity: 0; /* Esconde os botões por padrão */
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .message-entry-wrapper:hover .message-actions {
+            opacity: 1; /* Mostra os botões ao passar o mouse */
+        }
+
+        .message-actions button {
+            background-color: var(--message-action-btn-bg);
+            color: var(--message-action-btn-color);
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .message-actions button:hover {
+            background-color: var(--message-action-btn-hover-bg);
+            color: var(--message-action-btn-hover-color);
+        }
+
+        .message-text {
+            /* Estilo para o texto da mensagem */
+            padding-right: 35px; /* Espaço para os botões de ação */
+        }
+
+        .message-edit-area {
+            width: calc(100% - 35px); /* Ajusta largura para caber botões */
+            min-height: 40px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--message-edit-border);
+            background-color: var(--message-edit-bg);
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: var(--body-text-color);
+            resize: vertical;
+            overflow-y: auto;
+            box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura/altura */
+        }
+        .message-edit-area:focus {
+            outline: none;
+            border-color: var(--cor-destaque);
+            box-shadow: 0 0 0 2px rgba(215, 127, 161, 0.2);
+        }
+
 
         /* Estilos responsivos */
         @media (max-width: 768px) {
@@ -585,8 +664,20 @@
                 height: 36px;
                 font-size: 1.3rem;
             }
-            .message-entry {
+            .message-entry-wrapper {
                 font-size: 1.1rem;
+            }
+            .message-actions button {
+                width: 24px;
+                height: 24px;
+                font-size: 0.7rem;
+            }
+            .message-text {
+                padding-right: 30px;
+            }
+            .message-edit-area {
+                font-size: 1.1rem;
+                width: calc(100% - 30px);
             }
         }
 
@@ -670,12 +761,12 @@
 
     <div class="container">
         <h1>Minha Cartinha para Você!</h1>
-        <h2>Deixe uma mensagem especial para o MôBem.</h2>
+        <h2>Para o MôBem.</h2>
         
         <div class="chat-container-main">
             <div class="chat-input-area">
                 <textarea id="chatInput" placeholder="Escreva sua mensagem aqui..."></textarea>
-                <button id="sendMessageBtn">⬆️</button>
+                <button id="sendMessageBtn">➤</button>
             </div>
         </div>
 
@@ -713,8 +804,9 @@
                     <div class="golden-divider-center-left"></div>
                     <div class="golden-divider-center-right"></div>
                 </div>
-                </div>
-            <div class="cartinha-assinatura">Seu Môbem ❤️</div>
+                <div id="messagesArea"></div>
+            </div>
+            <div class="cartinha-assinatura">Seu MôBem ❤️</div>
         </div>
     </div>
 
@@ -754,6 +846,7 @@
         function abrirCartinha() {
             const cartinhaContainer = document.getElementById('cartinhaContainer');
             cartinhaContainer.classList.add('active');
+            renderMessages(); // Garante que as mensagens estejam atualizadas ao abrir
         }
 
         // Função para fechar a cartinha
@@ -785,37 +878,159 @@
             }
         }
 
-        // Lógica do Chat
+        // Lógica do Chat e Mensagens
         const chatInput = document.getElementById('chatInput');
         const sendMessageBtn = document.getElementById('sendMessageBtn');
-        const cartinhaConteudo = document.getElementById('cartinhaConteudo');
+        const messagesArea = document.getElementById('messagesArea'); // Nova div para as mensagens
 
-        // Array para armazenar as mensagens
-        let messages = [];
+        // Array para armazenar as mensagens. Carrega do localStorage ou inicia vazio.
+        let messages = JSON.parse(localStorage.getItem('mabemMessages')) || [];
+
+        // Função para salvar as mensagens no localStorage
+        function saveMessages() {
+            localStorage.setItem('mabemMessages', JSON.stringify(messages));
+        }
 
         // Função para renderizar as mensagens na cartinha
         function renderMessages() {
-            // Remove todas as mensagens existentes (exceto o poema e o divisor)
-            const existingMessages = cartinhaConteudo.querySelectorAll('.message-entry');
-            existingMessages.forEach(msg => msg.remove());
+            messagesArea.innerHTML = ''; // Limpa a área de mensagens antes de renderizar novamente
 
-            // Adiciona as mensagens do array
-            messages.forEach(msgText => {
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message-entry');
-                messageElement.textContent = msgText;
-                // Insere a nova mensagem antes da assinatura para manter a ordem
-                cartinhaConteudo.insertBefore(messageElement, document.querySelector('.cartinha-assinatura') || document.querySelector('.golden-divider').nextElementSibling);
+            messages.forEach((msgText, index) => {
+                const messageWrapper = document.createElement('div');
+                messageWrapper.classList.add('message-entry-wrapper');
+                messageWrapper.dataset.index = index; // Armazena o índice para edição/exclusão
+
+                const messageTextElement = document.createElement('span');
+                messageTextElement.classList.add('message-text');
+                messageTextElement.textContent = msgText;
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.classList.add('message-actions');
+
+                const editButton = document.createElement('button');
+                editButton.textContent = '✏️';
+                editButton.title = 'Editar Mensagem';
+                editButton.addEventListener('click', () => editMessage(index));
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '🗑️';
+                deleteButton.title = 'Excluir Mensagem';
+                // Passa o messageWrapper para a função deleteMessage para poder removê-lo diretamente
+                deleteButton.addEventListener('click', () => deleteMessage(index, messageWrapper));
+
+
+                actionsDiv.appendChild(editButton);
+                actionsDiv.appendChild(deleteButton);
+
+                messageWrapper.appendChild(messageTextElement);
+                messageWrapper.appendChild(actionsDiv);
+
+                // Adiciona a divisória dourada após cada mensagem
+                const goldenDivider = document.createElement('div');
+                goldenDivider.classList.add('golden-divider');
+                goldenDivider.innerHTML = `
+                    <div class="golden-divider-center"></div>
+                    <div class="golden-divider-center-left"></div>
+                    <div class="golden-divider-center-right"></div>
+                `;
+                messageWrapper.appendChild(goldenDivider);
+
+                messagesArea.appendChild(messageWrapper);
             });
             // Rola para o final da cartinha para ver a nova mensagem
-            cartinhaConteudo.scrollTop = cartinhaConteudo.scrollHeight;
+            document.getElementById('cartinhaConteudo').scrollTop = document.getElementById('cartinhaConteudo').scrollHeight;
+        }
+
+        // Função para editar uma mensagem
+        function editMessage(index) {
+            const messageWrapper = messagesArea.querySelector(`[data-index="${index}"]`);
+            if (!messageWrapper) return;
+
+            const messageTextElement = messageWrapper.querySelector('.message-text');
+            const actionsDiv = messageWrapper.querySelector('.message-actions');
+            const goldenDivider = messageWrapper.querySelector('.golden-divider');
+
+            // Cria um textarea para edição
+            const textarea = document.createElement('textarea');
+            textarea.classList.add('message-edit-area');
+            textarea.value = messages[index];
+            textarea.rows = 3; // Define um número de linhas inicial
+            textarea.style.height = 'auto'; // Garante que a altura se ajuste
+
+            // Cria os botões de salvar e cancelar
+            const saveButton = document.createElement('button');
+            saveButton.textContent = '✔️';
+            saveButton.title = 'Salvar Edição';
+            saveButton.addEventListener('click', () => saveEdit(index, textarea.value));
+
+            const cancelButton = document.createElement('button');
+            cancelButton.textContent = '❌';
+            cancelButton.title = 'Cancelar Edição';
+            cancelButton.addEventListener('click', () => renderMessages()); // Renderiza novamente para descartar alterações
+
+            // Limpa os botões de ação existentes e adiciona os novos (salvar/cancelar)
+            actionsDiv.innerHTML = ''; 
+            actionsDiv.appendChild(saveButton);
+            actionsDiv.appendChild(cancelButton);
+
+            // Esconde a divisória enquanto edita
+            if (goldenDivider) {
+                goldenDivider.style.display = 'none';
+            }
+
+            // Substitui o elemento de texto pelo textarea
+            messageWrapper.replaceChild(textarea, messageTextElement);
+            textarea.focus(); // Foca no textarea para o usuário digitar
+            
+            // Ajusta a altura do textarea quando o usuário digita
+            textarea.addEventListener('input', () => {
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 150) + 'px'; // Limita a 150px
+            });
+            // Ajusta a altura inicial após a renderização
+            textarea.style.height = Math.min(textarea.scrollHeight, 150) + 'px';
+        }
+
+        // Função para salvar a edição
+        function saveEdit(index, newText) {
+            if (newText.trim() !== '') {
+                messages[index] = newText.trim();
+                saveMessages();
+                renderMessages(); // Renderiza para mostrar a mensagem atualizada
+            } else {
+                // Se o texto estiver vazio após edição, pergunta se quer excluir
+                if (confirm('A mensagem editada está vazia. Deseja excluí-la?')) {
+                    // Chama deleteMessage passando o índice para remover do array e do DOM
+                    deleteMessage(index, messagesArea.querySelector(`[data-index="${index}"]`));
+                } else {
+                    renderMessages(); // Volta para o estado anterior
+                }
+            }
+        }
+
+        // Função para excluir uma mensagem
+        function deleteMessage(index, messageElement) {
+            if (confirm('Tem certeza que deseja excluir esta mensagem?')) {
+                messages.splice(index, 1); // Remove a mensagem do array
+                saveMessages(); // Salva a alteração no localStorage
+                messageElement.remove(); // Remove o elemento da DOM
+
+                // Após a exclusão, é importante re-renderizar para que os índices dos elementos restantes se atualizem
+                // e os botões de editar/excluir funcionem corretamente.
+                renderMessages(); 
+            }
         }
 
         sendMessageBtn.addEventListener('click', () => {
             const message = chatInput.value.trim();
             if (message) {
                 messages.push(message); // Adiciona a mensagem ao array
-                renderMessages(); // Renderiza todas as mensagens
+                saveMessages(); // Salva as mensagens
+
+                // Se a cartinha estiver aberta, renderiza a nova mensagem imediatamente
+                if (document.getElementById('cartinhaContainer').classList.contains('active')) {
+                    renderMessages();
+                }
 
                 chatInput.value = ''; // Limpa o campo de texto
                 chatInput.style.height = '40px'; // Reseta a altura do textarea
@@ -835,10 +1050,7 @@
             criarCoracoes();
             
             // Adiciona eventos aos botões
-            document.getElementById('btnAbrirCartinha').addEventListener('click', () => {
-                renderMessages(); // Garante que as mensagens estejam atualizadas ao abrir
-                abrirCartinha();
-            });
+            document.getElementById('btnAbrirCartinha').addEventListener('click', abrirCartinha);
             document.getElementById('btnFecharCartinha').addEventListener('click', fecharCartinha);
             
             // Fecha a cartinha ao clicar fora dela
@@ -869,6 +1081,9 @@
                     applyTheme('dark');
                 }
             });
+
+            // Renderiza as mensagens iniciais ao carregar a página
+            renderMessages();
         });
     </script>
 </body>
