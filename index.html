@@ -37,15 +37,19 @@
             --card-background: #fff;
             --card-border: #f0f0f0;
             --close-button-color: var(--cor-texto);
-            --countdown-bg: var(--cor-primaria);
-            --countdown-title-color: var(--cor-destaque);
-            --countdown-value-bg: var(--cor-texto-claro);
-            --countdown-value-color: var(--cor-destaque);
-            --chapter-number-color: var(--cor-numeracao-capitulo); 
             --button-toggle-bg: #e0e0e0;
             --button-toggle-border: #ccc;
             --button-toggle-circle: #fff;
             --button-toggle-icon: #333;
+
+            /* Chat styles */
+            --chat-background: #f0f0f0;
+            --chat-border: #e0e0e0;
+            --chat-input-bg: #ffffff;
+            --chat-input-border: #cccccc;
+            --chat-button-bg: var(--cor-destaque);
+            --chat-button-text: var(--cor-texto-claro);
+            --chat-main-bg: #ffffff; /* Fundo para a área do chat na página principal */
         }
 
         /* Variáveis para o Tema ESCURO (aplicadas via classe .dark-theme) */
@@ -55,10 +59,6 @@
             --card-background: #2a2a2a;
             --card-border: #3a3a3a;
             --close-button-color: #f0f0f0;
-            --countdown-bg: #3c3c3c;
-            --countdown-title-color: #92b0d0; /* Azul claro para destaque no escuro */
-            --countdown-value-bg: #555;
-            --countdown-value-color: #f0f0f0;
             --chapter-number-color: #88C0D0; /* Cor específica para numeração no tema escuro */
             --button-toggle-bg: #333;
             --button-toggle-border: #555;
@@ -72,6 +72,15 @@
             --dourado-medio: #A48D3F;
             --dourado-escuro: #7A6A2C;
             --dourado-sombra: rgba(255, 255, 255, 0.1);
+
+            /* Chat styles for dark theme */
+            --chat-background: #3a3a3a;
+            --chat-border: #4a4a4a;
+            --chat-input-bg: #2a2a2a;
+            --chat-input-border: #555555;
+            --chat-button-bg: #7ba2c5;
+            --chat-button-text: #f0f0f0;
+            --chat-main-bg: #2a2a2a; /* Fundo para a área do chat na página principal (escuro) */
         }
 
         /* Reset e estilos básicos */
@@ -115,6 +124,9 @@
             z-index: 1; 
             position: relative; 
             margin-top: 50px; /* Para não sobrepor o botão de tema */
+            display: flex; /* Adicionado para layout flexbox */
+            flex-direction: column; /* Organiza itens em coluna */
+            align-items: center; /* Centraliza itens horizontalmente */
         }
 
         /* Título principal */
@@ -134,59 +146,6 @@
             transition: color 0.3s ease;
         }
 
-        /* Área do temporizador */
-        .countdown-container {
-            background-color: var(--countdown-bg);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--sombra-suave);
-            transition: background-color 0.3s ease;
-        }
-
-        .countdown-title {
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            color: var(--countdown-title-color);
-            transition: color 0.3s ease;
-        }
-
-        .countdown {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        .countdown-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 60px;
-        }
-
-        .countdown-value {
-            font-size: 2rem;
-            font-weight: bold;
-            background-color: var(--countdown-value-bg);
-            color: var(--countdown-value-color);
-            border-radius: 8px;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--sombra-suave);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .countdown-label {
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-
         /* Botão para abrir a cartinha */
         .btn-cartinha {
             background-color: var(--cor-destaque);
@@ -199,6 +158,7 @@
             transition: all 0.3s ease;
             box-shadow: var(--sombra-suave);
             margin-top: 1rem;
+            margin-bottom: 2rem; /* Adicionado margem para separar do chat */
         }
 
         .btn-cartinha:hover {
@@ -245,19 +205,19 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); 
             transform: scale(0.9);
             transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-            background-image: linear-gradient(to bottom, var(--card-background) 0%, rgba(var(--card-background-rgb-value), 0.9) 100%); 
             border: 1px solid var(--card-border);
+            display: flex; /* Adicionado para layout interno */
+            flex-direction: column; /* Adicionado para layout interno */
         }
         /* Para o gradiente da cartinha, precisamos converter a cor de fundo RGB se usarmos var(--card-background) diretamente. 
-           Uma alternativa mais simples é usar uma cor sólida ou ajustar o gradiente para ser menos dependente de var().
-           Por simplicidade e compatibilidade, vou usar uma cor sólida e leve variação. */
+            Uma alternativa mais simples é usar uma cor sólida ou ajustar o gradiente para ser menos dependente de var().
+            Por simplicidade e compatibilidade, vou usar uma cor sólida e leve variação. */
         body.light-theme .cartinha {
             background-image: linear-gradient(to bottom, #fff 0%, #f9f9f9 100%);
         }
         body.dark-theme .cartinha {
             background-image: linear-gradient(to bottom, #2a2a2a 0%, #353535 100%);
         }
-
 
         .cartinha-container.active .cartinha {
             transform: scale(1);
@@ -271,6 +231,7 @@
             text-align: left;
             margin-bottom: 1.5rem;
             transition: color 0.3s ease;
+            flex-grow: 1; /* Permite que o conteúdo ocupe o espaço disponível */
         }
 
         .cartinha-section {
@@ -491,6 +452,91 @@
             pointer-events: none; 
         }
 
+        /* Estilos do Campo de Chat na Primeira Página */
+        .chat-container-main {
+            background-color: var(--chat-main-bg);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: var(--sombra-suave);
+            width: 100%;
+            max-width: 500px; /* Mesma largura da cartinha para consistência */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 1px solid var(--chat-border);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%; /* Ocupa toda a largura do chat-container-main */
+        }
+
+        .chat-input-area textarea {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--chat-input-border);
+            background-color: var(--chat-input-bg);
+            font-family: 'Arial', sans-serif;
+            font-size: 1rem;
+            color: var(--body-text-color);
+            resize: none; /* Desativa o redimensionamento manual */
+            min-height: 40px; /* Altura mínima */
+            max-height: 100px; /* Altura máxima */
+            overflow-y: auto; /* Adiciona scroll se o texto for muito longo */
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        .chat-input-area textarea:focus {
+            outline: none;
+            border-color: var(--cor-destaque);
+            box-shadow: 0 0 0 2px rgba(215, 127, 161, 0.2); /* Sombra suave, usei o valor RGB de --cor-destaque para compatibilidade */
+        }
+
+        .chat-input-area button {
+            background-color: var(--chat-button-bg);
+            color: var(--chat-button-text);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            flex-shrink: 0; /* Impede que o botão encolha */
+        }
+
+        .chat-input-area button:hover {
+            background-color: var(--cor-secundaria);
+            transform: scale(1.05);
+        }
+
+        .chat-input-area button:active {
+            transform: scale(0.95);
+        }
+
+        /* Estilos para as mensagens do chat dentro da cartinha */
+        .message-entry {
+            margin-top: 1em; /* Espaçamento entre mensagens ou entre o poema e a primeira mensagem */
+            padding: 0.8em 1.2em;
+            background-color: var(--chat-input-bg); /* Reutiliza a cor do input para as mensagens */
+            border-radius: 15px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            text-align: left;
+            color: var(--body-text-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            word-wrap: break-word; /* Garante que palavras longas quebrem */
+            white-space: pre-wrap; /* Preserva quebras de linha e espaços do textarea */
+        }
+
         /* Estilos responsivos */
         @media (max-width: 768px) {
             h1 {
@@ -498,20 +544,6 @@
             }
             
             h2 {
-                font-size: 1.5rem;
-            }
-            
-            .countdown {
-                flex-wrap: wrap;
-            }
-            
-            .countdown-item {
-                min-width: 50px;
-            }
-            
-            .countdown-value {
-                width: 50px;
-                height: 50px;
                 font-size: 1.5rem;
             }
             
@@ -542,6 +574,20 @@
                 width: 12px;
                 height: 8px;
             }
+            .chat-container-main, .chat-input-area {
+                padding: 8px;
+            }
+            .chat-input-area textarea {
+                padding: 8px 12px;
+            }
+            .chat-input-area button {
+                width: 36px;
+                height: 36px;
+                font-size: 1.3rem;
+            }
+            .message-entry {
+                font-size: 1.1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -554,12 +600,6 @@
             }
             
             h2 {
-                font-size: 1.2rem;
-            }
-            
-            .countdown-value {
-                width: 40px;
-                height: 40px;
                 font-size: 1.2rem;
             }
             
@@ -593,6 +633,25 @@
                 height: 12px;
                 font-size: 0.8rem;
             }
+            .golden-divider-center::before,
+            .golden-divider-center::after {
+                width: 6px;
+                height: 6px;
+            }
+            .chat-container-main {
+                padding: 10px; /* Ajusta o padding para telas menores */
+            }
+            .chat-input-area {
+                flex-direction: column; /* Empilha input e botão em telas pequenas */
+                gap: 5px;
+            }
+            .chat-input-area textarea {
+                width: 100%;
+            }
+            .chat-input-area button {
+                width: 100%;
+                border-radius: 10px;
+            }
         }
     </style>
 </head>
@@ -610,190 +669,25 @@
     </button>
 
     <div class="container">
-        <h1>Tempo até encontrar o MôBem</h1>
-        <h2>Contando os minutos até estarmos juntos...</h2>
+        <h1>Minha Cartinha para Você!</h1>
+        <h2>Deixe uma mensagem especial para o MôBem.</h2>
         
-        <div class="countdown-container">
-            <div class="countdown-title">Faltam:</div>
-            <div class="countdown">
-                <div class="countdown-item">
-                    <div class="countdown-value" id="dias">00</div>
-                    <div class="countdown-label">Dias</div>
-                </div>
-                <div class="countdown-item">
-                    <div class="countdown-value" id="horas">00</div>
-                    <div class="countdown-label">Horas</div>
-                </div>
-                <div class="countdown-item">
-                    <div class="countdown-value" id="minutos">00</div>
-                    <div class="countdown-label">Minutos</div>
-                </div>
-                <div class="countdown-item">
-                    <div class="countdown-value" id="segundos">00</div>
-                    <div class="countdown-label">Segundos</div>
-                </div>
+        <div class="chat-container-main">
+            <div class="chat-input-area">
+                <textarea id="chatInput" placeholder="Escreva sua mensagem aqui..."></textarea>
+                <button id="sendMessageBtn">⬆️</button>
             </div>
         </div>
-        
+
         <button class="btn-cartinha" id="btnAbrirCartinha">Abrir Cartinha</button>
     </div>
     
     <div class="cartinha-container" id="cartinhaContainer">
         <div class="cartinha">
-            <button class="btn-fechar" id="btnFecharCartinha">×</button>
-            <div class="cartinha-conteudo">
-
+            <button class="btn-fechar" id="btnFecharCartinha">x</button><br>
+            <div class="cartinha-conteudo" id="cartinhaConteudo">
                 <div class="cartinha-section">
-                    <span class="cartinha-section-number"> 12 </span>
-                    Meu Amor,
-                    <br><br>
-                    Chegou o dia que tanto esperei, a madrugada que antecede nosso reencontro, e meu coração transborda de um sentimento que nem as palavras conseguem traduzir completamente. Essa expectativa de te ver amanhã de manhã é o sentimento mais bonito e puro que já senti. É uma mistura de alegria, ansiedade boa e uma certeza avassaladora de que estar com você é o meu lugar.
-                    <br><br>
-                    Cada dia que passamos longe, cada cartinha que escrevi, foi um passo a menos nessa contagem regressiva que agora chega ao fim. Sonhei com esse momento, com a leveza do seu abraço, com a melodia da sua voz pertinho de mim. Não vejo a hora de te olhar nos olhos, de sentir seu cheiro e de finalmente poder te encher de todo o carinho que guardei.
-                    <br><br>
-                    A saudade que me acompanhou até aqui agora se transforma na mais pura felicidade. Estou a poucas horas de te ter nos meus braços, e isso é tudo o que importa. Mal posso esperar para te ver e viver o nosso dia.
-                    <br><br>
-                    Com todo o meu amor e a felicidade indescritível de te reencontrar,
-                    <br><br>
-                    Seu MôBem ❤️
-                </div>
-                
-                <div class="golden-divider">
-                    <div class="golden-divider-center"></div>
-                    <div class="golden-divider-center-left"></div>
-                    <div class="golden-divider-center-right"></div>
-                </div>
-
-                <div class="cartinha-section">
-                    <span class="cartinha-section-number"> 11 </span>
-                    Amor,
-                    <br><br>
-                    Meu coração foi invadido por uma ira e tristeza imensa ao saber do que você passou hoje. Queria, mais do que tudo, poder estar aí agora, te envolver em um abraço que te proteja de todo mal e te lembre o quanto você é amada. Essa distância se torna um peso insuportável quando tudo o que quero é cuidar de você.
-                    <br><br>
-                    Você é uma alma preciosa e maravilhosa, e nada, absolutamente nada, pode apagar a luz que você irradia. Eu te amo com uma intensidade que transcende qualquer palavra, e te admiro por cada passo que você dá, por quem você é.
-                    <br><br>
-                    Mesmo de longe, quero que sinta meu amor te abraçando, te envolvendo em cada palavra desta carta. Que a alegria volte a brilhar em seus olhos. Por favor, lembre-se que você não está sozinha. Conte comigo para tudo, sempre. Meu amor por você é incondicional.
-                    <br><br>
-                    Com todo o meu amor, meu carinho mais profundo e uma saudade imensa,
-                    <br><br>
-                    Seu MôBem ❤️
-                </div>
-
-                <div class="golden-divider">
-                    <div class="golden-divider-center"></div>
-                    <div class="golden-divider-center-left"></div>
-                    <div class="golden-divider-center-right"></div>
-                </div>
-
-                <div class="cartinha-section">
-                    <span class="cartinha-section-number"> 10 </span>
-                    Meu coração,
-                    <br><br>
-                    A cada dia! A ansiedade de te ver pessoalmente depois de todos esses dias longe é quase palpável. Cada cartinha que escrevi foi uma forma de diminuir a distância, de te manter pertinho, e agora, saber que estou a poucas horas de te abraçar, é a melhor sensação do mundo.
-                    <br><br>
-                    A saudade que senti só serviu para confirmar o quanto você é essencial na minha vida. Mal posso esperar para olhar nos seus olhos, sentir seu cheiro, ouvir sua risada e simplesmente estar ao seu lado, sem telas ou quilômetros nos separando. O dia que tanto esperei esta chegando.
-                    <br><br>
-                    Meu coração está cheio de alegria e do desejo de te encher de toooodo o carinho que guardei.
-                    <br><br>
-                    Com todo meu amor e mais ansiedade que ontem,
-                    <br><br>
-                    Seu MôBem ❤️
-                </div>
-
-                <div class="golden-divider">
-                    <div class="golden-divider-center"></div>
-                    <div class="golden-divider-center-left"></div>
-                    <div class="golden-divider-center-right"></div>
-                </div>
-
-                <div class="cartinha-section">
-                    <span class="cartinha-section-number"> 9 </span>
-                    Meu Amor,
-                    <br><br>
-                    A cada amanhecer, a contagem regressiva fica mais emocionante, e cada segundo parece durar mais. Mal posso esperar para sentir o calor do seu abraço, ver de perto seu sorriso e finalmente ter você aqui comigo de novo.
-                    <br><br>
-                    A saudade tem sido uma companheira constante, mas a certeza de que em breve estaremos juntos me dá força e enche meu coração de expectativa. Tenho sonhado com o nosso momento, com a leveza de estar ao seu lado e a alegria de não ter mais essa distância nos separando.
-                    <br><br>
-                    Estou contando os segundos, meu amor. 
-                    <br><br>
-                    Com todo meu amor e  ansiedade,kkkkkk.
-                    <br><br>
-                    Seu MôBem ❤️
-                </div>
-
-                <div class="golden-divider">
-                    <div class="golden-divider-center"></div>
-                    <div class="golden-divider-center-left"></div>
-                    <div class="golden-divider-center-right"></div>
-                </div>
-
-                <div class="cartinha-section">
-                    <span class="cartinha-section-number"> 8 </span>
-                    Meu Amor,
-                    <br><br>
-                    Hoje, enquanto penso em você, quero que saiba que, Não importa a distância que nos separa agora, meu compromisso com você é inabalável. Minha mão estará sempre estendida, meu ouvido atento e meu coração pronto para te acolher. Conte comigo.                
-                    <br><br>
-                    Sinto uma saudade enorme de te ter por perto, mas a certeza de que nosso reencontro cada vez mais se aproxima me dá ainda mais força para aguardar.
-                    <br><br>
-                    Com todo meu amor e carinho... cheirinho e mil beijinhos
-                    <br><br>
-                    Seu MôBem ❤️
-                </div>
-
-
-                <div class="golden-divider">
-                    <div class="golden-divider-center"></div>
-                    <div class="golden-divider-center-left"></div>
-                    <div class="golden-divider-center-right"></div>
-                </div>
-
-                    <div class="cartinha-section">
-                        <span class="cartinha-section-number"> 7 </span>
-                        Meu Amor,
-                        <br><br>
-                        Eu te admiro em cada detalhe, na sua inteligência, no seu carinho e na sua capacidade de fazer o meu mundo ser um lugar melhor.
-                        <br><br>
-                        Você é tão importante para mim. É a luz que ilumina meus dias, a paz que encontro em meio à correria e a razão de muitos dos meus sorrisos. Ter você na minha vida é um presente que valorizo a cada instante.
-                        <br><br>
-                        A saudade aperta a cada dia. Queria muito estar com você, te abraçar e te dizer pessoalmente o quanto você é incrível e o quanto te amo. Cada dia que passa, a vontade de te ver só aumenta.
-                        <br><br>
-                        Com todo meu amor, admiração e uma saudade enorme,
-                        <br><br>
-                        Seu MôBem ❤️
-                    </div>
-
-                    <div class="golden-divider">
-                    <div class="golden-divider-center"></div>
-                    <div class="golden-divider-center-left"></div>
-                    <div class="golden-divider-center-right"></div>
-                    </div>
-
-                    <div class="cartinha-section">
-                        <span class="cartinha-section-number"> 6 </span>
-                        Meu Amor,
-                        <br><br>
-                        Hoje, dia 2 de junho, um ano se passou, que eu tive a certeza mais linda da minha vida: eu estava completamente apaixonado por você.
-                        <br><br>
-                        Você estava lá, linda como sempre, e com uma alegria que contagiava tudo ao redor. Sua voz, seu sorriso... ah, seu sorriso! Ele mudou tudo para mim. Desde aquele dia, minha vida nunca mais foi a mesma. Finalmente, eu me senti vivo de verdade, pude sentir algo tão profundo e transformador.
-                        <br><br>
-                        Hoje mais que nunca queria você. Estou com saudade, como nunca senti.
-                        <br><br>
-                        É por isso que, mesmo longe, cada lembrança sua me acende e me faz querer ainda mais a sua presença. 
-                        <br><br>
-                        Com todo meu amor, sempre seu,
-                        <br><br>
-                        Seu MôBem ❤️
-                        <br><br><br>... antes de me despedir fiz um poema para você, ele esta aqui em baixo
-                    </div>
-
-                    <div class="golden-divider">
-                    <div class="golden-divider-center"></div>
-                    <div class="golden-divider-center-left"></div>
-                    <div class="golden-divider-center-right"></div>
-                </div>
-
-                <div class="cartinha-section">
-                    <span class="cartinha-section-number"> poema </span><br>
+                    <span class="cartinha-section-number"> Poema </span><br>
 
                     Para Minha Rosa
                     <br><br>
@@ -813,147 +707,18 @@
                     Agora sou responsável, seu jardim sereno,
                     <br>
                     Você é única pra mim, meu amor terreno.
-
                 </div>
-
-             
                 <div class="golden-divider">
                     <div class="golden-divider-center"></div>
                     <div class="golden-divider-center-left"></div>
                     <div class="golden-divider-center-right"></div>
                 </div>
-
-
-
-                <div class="cartinha-section">
-                    <span class="cartinha-section-number"> 5 </span>
-                    Meu Amor,
-                    <br><br>
-                    Que bom foi poder conversar com você hoje à tarde! Sua voz tem um poder incrível de acalmar meu coração e me fazer sorrir, mesmo com a distância. A ligação recarregou minhas energias e me deixou ainda mais feliz. É impressionante como um simples "oláaa!" seu pode transformar o meu dia inteiro.
-                    <br><br>
-                    E falando em coisas boas, adorei saber que acertei na escolha da sua comida hoje! É tão bom ver que mesmo longe, consigo te agradar e arrancar um sorriso seu. Pequenos momentos como esses me lembram que estamos sempre conectados, e me enchem de alegria e gratidão por ter você na minha vida.
-                    <br><br>
-                    Mal posso esperar para te abraçar de novo e poder fazer muitas outras escolhas perfeitas ao seu lado.
-                    <br><br>
-                    Com todo meu amor e a cada dia mais feliz com você,
-                    <br><br>
-                    Seu MôBem ❤️
                 </div>
-
-                 <div class="golden-divider">
-                    <div class="golden-divider-center"></div>
-                    <div class="golden-divider-center-left"></div>
-                    <div class="golden-divider-center-right"></div>
-                </div>
-
-                <div class="cartinha-section">
-                    <span class="cartinha-section-number"> 4 </span>
-                    Meu Amor,
-                    <br><br>
-                    Hoje, meu coração esteve com você o dia inteiro, especialmente sabendo que não se sentiu bem. A distância se torna ainda mais pesada quando penso que não posso cuidar de você de perto, te dar um abraço apertado ou simplesmente estar ao seu lado para que se sinta melhor. Queria muito estar aí para cuidar de você, meu bem.
-                    <br><br>
-                    Mas, em meio a essa saudade e preocupação, há uma alegria que cresce a cada segundo: o nosso reencontro está se aproximando! Cada dia que passa é um passo a menos para eu finalmente poder te ver, segurar sua mão e sentir seu abraço. A ansiedade é enorme, e mal consigo conter a felicidade que me inunda só de pensar em te ter por perto novamente.
-                    <br><br>
-                    Melhore logo, meu amor. Estou contando os segundos para te reencontrar e poder te encher de carinho.
-                    <br><br>
-                    Com todo meu amor e uma saudade imensa,
-                    <br><br>
-                    Seu MôBem 😘
-                </div>
-
-                <div class="golden-divider">
-                    <div class="golden-divider-center"></div>
-                    <div class="golden-divider-center-left"></div>
-                    <div class="golden-divider-center-right"></div>
-                </div>
-                
-                <div class="cartinha-section">
-                    <span class="cartinha-section-number"> 3 </span>
-                    Meu Amor,
-                    <br><br>
-                    Hoje, como sempre, acordei pensando em você. Lembrei-me de quando, de relance, vi seu lindo rostinho enquanto dormia esta madrugada. Isso me fez refletir sobre algo que o amor verdadeiro nos ensina: a importância de valorizar cada pequeno detalhe. Cada risada sua, cada olhar, o jeito que você ajeita o cabelo, a sua empolgação ao falar de algo que ama... são esses momentos simples que constroem a base do nosso amor e que tanto me fazem falta quando estou longe.
-                    <br><br>
-                    Não estar agora com você só me faz perceber o quanto cada detalhe seu faz diferença. Não vejo a hora de te reencontrar e poder observar tudo de pertinho de novo: seu cheirinho, a vibração da sua voz, o som da sua respiração no meu rosto.
-                    <br><br>
-                    Com todo meu amor e saudade,
-                    <br><br>
-                    Seu MôBem ❤️
-
-                </div>
-
-               <div class="golden-divider">
-                    <div class="golden-divider-center"></div>
-                    <div class="golden-divider-center-left"></div>
-                    <div class="golden-divider-center-right"></div>
-                </div>
-
-                <div class="cartinha-section">
-                    <span class="cartinha-section-number"> 2 </span>
-                    Querida MôBem,
-                    <br><br>
-                    Soube que te amava porque não penso em você só quando estou sozinho.
-                    <br><br>
-                    Penso mesmo quando estou trabalhando, quando estou me divertindo, e mesmo quando estou com família, com amigos. Independente da hora do meu dia, ainda assim queria você ali.
-                    <br><br>
-                    Eu amo tudo em você — o jeito que fala, seu sorriso, sua risada tentando conter o mundo.
-                    <br><br>
-                    E mesmo que leia isso à noite, ou amanhã com o sol no rosto... só quero que saiba: eu te amo ❤️.
-                </div>
-                
-                <div class="golden-divider">
-                    <div class="golden-divider-center"></div>
-                    <div class="golden-divider-center-left"></div>
-                    <div class="golden-divider-center-right"></div>
-                </div>
-                
-                <div class="cartinha-section">
-                    <span class="cartinha-section-number"> 1 </span>
-                    Meu amor,                                                           
-                    <br><br>
-                    Cada dia ao seu lado é um presente que a vida me deu. Quando olho para trás, vejo o quanto crescemos juntos e o quanto nosso amor se fortaleceu com cada desafio que enfrentamos.
-                    <br><br>
-                    Você é meu porto seguro, minha inspiração e minha maior alegria. Nos seus olhos encontro paz, no seu sorriso encontro felicidade, e no seu abraço encontro meu lar.
-                    <br><br>
-                    Não importa quanto tempo passe, meu coração sempre baterá mais forte por você. Estou contando os dias para nosso próximo momento especial juntos.
-                    <br><br>
-                    Com todo meu amor,
-                </div>
-            </div>
             <div class="cartinha-assinatura">Seu Môbem ❤️</div>
         </div>
     </div>
 
     <script>
-        // Função para iniciar o temporizador
-        function iniciarTemporizador() {
-            // Data alvo (10 de Junho de 2025, 00:10:30) - Lembre-se que o mês é 0-indexado (Janeiro=0, Junho=5)
-            const dataAlvo = new Date(2025, 5, 09, 08, 45, 00).getTime(); 
-            
-            // Atualiza o temporizador a cada segundo
-            const temporizador = setInterval(function() {
-                const agora = new Date().getTime();
-                const diferenca = dataAlvo - agora;
-                
-                const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
-                const horas = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
-                const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
-                
-                document.getElementById('dias').textContent = dias.toString().padStart(2, '0');
-                document.getElementById('horas').textContent = horas.toString().padStart(2, '0');
-                document.getElementById('minutos').textContent = minutos.toString().padStart(2, '0');
-                document.getElementById('segundos').textContent = segundos.toString().padStart(2, '0');
-                
-                if (diferenca < 0) {
-                    clearInterval(temporizador);
-                    document.getElementById('dias').textContent = '00';
-                    document.getElementById('horas').textContent = '00';
-                    document.getElementById('minutos').textContent = '00';
-                    document.getElementById('segundos').textContent = '00';
-                }
-            }, 1000);
-        }
-
         // Função para criar e animar corações caindo
         function criarCoracoes() {
             const heartContainer = document.querySelector('.heart-animation-container');
@@ -1020,16 +785,60 @@
             }
         }
 
+        // Lógica do Chat
+        const chatInput = document.getElementById('chatInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const cartinhaConteudo = document.getElementById('cartinhaConteudo');
+
+        // Array para armazenar as mensagens
+        let messages = [];
+
+        // Função para renderizar as mensagens na cartinha
+        function renderMessages() {
+            // Remove todas as mensagens existentes (exceto o poema e o divisor)
+            const existingMessages = cartinhaConteudo.querySelectorAll('.message-entry');
+            existingMessages.forEach(msg => msg.remove());
+
+            // Adiciona as mensagens do array
+            messages.forEach(msgText => {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message-entry');
+                messageElement.textContent = msgText;
+                // Insere a nova mensagem antes da assinatura para manter a ordem
+                cartinhaConteudo.insertBefore(messageElement, document.querySelector('.cartinha-assinatura') || document.querySelector('.golden-divider').nextElementSibling);
+            });
+            // Rola para o final da cartinha para ver a nova mensagem
+            cartinhaConteudo.scrollTop = cartinhaConteudo.scrollHeight;
+        }
+
+        sendMessageBtn.addEventListener('click', () => {
+            const message = chatInput.value.trim();
+            if (message) {
+                messages.push(message); // Adiciona a mensagem ao array
+                renderMessages(); // Renderiza todas as mensagens
+
+                chatInput.value = ''; // Limpa o campo de texto
+                chatInput.style.height = '40px'; // Reseta a altura do textarea
+            }
+        });
+
+        // Ajusta a altura do textarea dinamicamente
+        chatInput.addEventListener('input', () => {
+            chatInput.style.height = 'auto'; // Reseta a altura
+            chatInput.style.height = Math.min(chatInput.scrollHeight, 100) + 'px'; // Limita a 100px
+        });
+
+
         // Inicializa as funcionalidades quando o DOM estiver carregado
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicia o temporizador
-            iniciarTemporizador();
-            
             // Inicia a animação dos corações
             criarCoracoes();
             
             // Adiciona eventos aos botões
-            document.getElementById('btnAbrirCartinha').addEventListener('click', abrirCartinha);
+            document.getElementById('btnAbrirCartinha').addEventListener('click', () => {
+                renderMessages(); // Garante que as mensagens estejam atualizadas ao abrir
+                abrirCartinha();
+            });
             document.getElementById('btnFecharCartinha').addEventListener('click', fecharCartinha);
             
             // Fecha a cartinha ao clicar fora dela
@@ -1040,19 +849,14 @@
             });
 
             // Lógica para determinar o tema inicial:
-            // 1. Verifica se há uma preferência salva no localStorage
             const savedTheme = localStorage.getItem('theme');
 
             if (savedTheme) {
-                // Se sim, aplica o tema salvo
                 applyTheme(savedTheme);
             } else {
-                // Se não, verifica a preferência do sistema operacional
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    // Se o sistema está em modo escuro, aplica o tema escuro
                     applyTheme('dark');
                 } else {
-                    // Caso contrário (sistema em modo claro ou não detectado), aplica o tema claro
                     applyTheme('light');
                 }
             }
